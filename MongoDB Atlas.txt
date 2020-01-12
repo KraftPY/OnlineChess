@@ -1,0 +1,3 @@
+Atlas: pykraft@gmail.com@DB-password-05
+Cluster KraftDB: dbUser@userpass
+Node.js link: mongodb+srv://dbUser:userpass@kraftdb-eonvl.gcp.mongodb.net/test?retryWrites=true&w=majority
