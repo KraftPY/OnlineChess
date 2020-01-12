@@ -1,0 +1,16 @@
+.reg_list {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+}
+.reg_list li {
+  padding: 10px;
+  margin: 1px;
+  font-size: 22px;
+  color: black;
+  border: 1px solid black;
+}
+.reg_list a {
+  outline: none;
+  text-decoration: none;
