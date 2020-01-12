@@ -1,17 +1,11 @@
+const mongoose = require('mongoose');
 const config = require('./config');
-const mysql = require('mysql');
 
-const connection = mysql.createConnection({
-	host: config.DB_CONECTION.host,
-	user: config.DB_CONECTION.user,
-	database: config.DB_CONECTION.database,
-	password: config.DB_CONECTION.password,
-	port: config.DB_CONECTION.port
-});
-
-connection.connect((err) => {
-	if (err) throw err;
-	console.log('Подключение к серверу MySQL успешно установлено');
-});
-
-module.exports = connection;
+module.exports = () => {
+	return new Promise((resolve, reject) => {
+		mongoose
+			.connect(config.MONGO_URL, config.MONGO_OPTIONS)
+			.then((db_info) => resolve(db_info))
+			.catch((err) => reject(err));
+	});
+};
