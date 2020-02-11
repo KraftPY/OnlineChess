@@ -1,0 +1,12 @@
+<%- include('layout/header') -%>
+
+<a href="./testPost">Login</a>
+<ul>
+	<% data.forEach( (el)=> { %>
+	<li>
+		<%=el.login+' '+el.pass%>
+	</li>
+	<%});%>
+</ul>
+
+<%- include('layout/footer') -%>

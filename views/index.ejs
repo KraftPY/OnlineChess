@@ -1,12 +1,27 @@
-<%- include('layout/header') -%>
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta http-equiv="X-UA-Compatible" content="ie=edge" />
+		<title>Chess</title>
+		<link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+		<link rel="stylesheet" href="public/stylesheets/reset.css" />
+		<link rel="stylesheet" href="public/stylesheets/header.css" />
+		<link rel="stylesheet" href="public/stylesheets/style.css" />
+	</head>
+	<body>
+		<header>
+			<ul class="reg_list">
+				<a href=""><li>Log-in</li></a>
+				<a href=""><li>Sig-in</li></a>
+				<a href=""><li>Log-out</li></a>
+			</ul>
+			<hr />
+		</header>
 
-<a href="./testPost">Login</a>
-<ul>
-	<% data.forEach( (el)=> { %>
-	<li>
-		<%=el.login+' '+el.pass%>
-	</li>
-	<%});%>
-</ul>
+		<%- include('layout/chessBoard') -%>
 
-<%- include('layout/footer') -%>
+		<script src="public/javascripts/main.js" type="module"></script>
+	</body>
+</html>
