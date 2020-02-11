@@ -17,6 +17,12 @@
 				<a href=""><li>Sig-in</li></a>
 				<a href=""><li>Log-out</li></a>
 			</ul>
+			<br />
+			<ol>
+				<% data.forEach((user) => { %>
+				<li><%= user.login %></li>
+				<% }); %>
+			</ol>
 			<hr />
 		</header>
 
