@@ -1,0 +1,182 @@
+@media screen and (min-width: 1024px) {
+	.wrapper {
+		justify-content: center;
+		grid-template-columns: 694px 300px;
+		grid-template-rows: 60px 694px 60px;
+		grid-gap: 5px;
+		grid-template-areas:
+			'black_out story'
+			'board story'
+			'white_out story';
+	}
+
+	.horizontal {
+		width: 25px;
+		height: 80px;
+	}
+
+	.vertical {
+		height: 25px;
+		width: 80px;
+	}
+}
+
+@media screen and (max-width: 1023px) and (min-width: 481px) {
+	.wrapper {
+		justify-content: center;
+		grid-template-columns: calc(100vw * 0.694) calc(100vw * 0.3);
+		grid-template-rows: calc(100vw * 0.694 * 0.08645) calc(100vw * 0.694) calc(100vw * 0.694 * 0.08645);
+		grid-gap: 1px;
+		grid-template-areas:
+			'black_out story'
+			'board story'
+			'white_out story';
+	}
+
+	.horizontal {
+		width: calc(100vw * 0.694 * 0.0357);
+		height: calc(100vw * 0.694 * 0.1142);
+	}
+
+	.vertical {
+		height: calc(100vw * 0.694 * 0.0357);
+		width: calc(100vw * 0.694 * 0.1142);
+	}
+
+	.chessBoard th {
+		font-size: calc(100vw * 0.694 * 0.023);
+	}
+
+	.story_list {
+		height: calc(100% - calc(100vw * 0.694 * 0.0432));
+	}
+
+	.title {
+		line-height: calc(100vw * 0.694 * 0.0432);
+		font-size: calc(100vw * 0.694 * 0.0331);
+	}
+
+	.list_moves {
+		padding-left: calc(100vw * 0.694 * 0.0432);
+		font-size: calc(100vw * 0.694 * 0.0259);
+	}
+
+	.king_white,
+	.king_black,
+	.queen_black,
+	.queen_white,
+	.rook_black,
+	.rook_white,
+	.bishop_black,
+	.bishop_white,
+	.knight_black,
+	.knight_white,
+	.pawn_black,
+	.pawn_white {
+		width: calc(100vw * 0.694 * 0.1142);
+		height: calc(100vw * 0.694 * 0.1142);
+	}
+
+	.figures_out {
+		width: calc(100% / 15);
+		height: 80%;
+		margin-right: 2px;
+	}
+	.q_form {
+		width: 100vw;
+		margin-top: 50px;
+	}
+}
+
+@media screen and (max-width: 480px) {
+	.wrapper {
+		justify-content: center;
+		grid-template-columns: 100vw;
+		grid-template-rows: calc(100vw * 0.08645) 100vw calc(100vw * 0.08645) 50vw;
+		grid-gap: 1px;
+		grid-template-areas:
+			'black_out'
+			'board'
+			'white_out'
+			'story';
+	}
+
+	.horizontal {
+		width: calc(100vw * 0.0357);
+		height: calc(100vw * 0.1142);
+	}
+
+	.vertical {
+		height: calc(100vw * 0.0357);
+		width: calc(100vw * 0.1142);
+	}
+
+	.chessBoard {
+		border: 2px solid #b5663b;
+	}
+
+	.chessBoard th {
+		font-size: calc(100vw * 0.023);
+	}
+
+	.story {
+		margin-top: 10px;
+	}
+
+	.story_list {
+		height: calc(100% - calc(100vw * 0.0432));
+	}
+
+	.title {
+		line-height: calc(100vw * 0.0432);
+		font-size: calc(100vw * 0.0331);
+	}
+
+	.list_moves {
+		padding-left: calc(100vw * 0.0432);
+		font-size: calc(100vw * 0.0259);
+	}
+
+	.q_form {
+		width: 100vw;
+		margin-top: 50px;
+	}
+
+	.king_white,
+	.king_black,
+	.queen_black,
+	.queen_white,
+	.rook_black,
+	.rook_white,
+	.bishop_black,
+	.bishop_white,
+	.knight_black,
+	.knight_white,
+	.pawn_black,
+	.pawn_white {
+		width: calc(100vw * 0.1142 - 1px);
+		height: calc(100vw * 0.1142 - 1px);
+	}
+
+	.figures_out {
+		width: calc(100% / 15);
+		height: 80%;
+		margin-right: 2px;
+	}
+
+	.choose_out {
+		height: 110px;
+		width: 90vw;
+		margin: 100px 0 50px 0;
+	}
+
+	.ok {
+		width: 150px;
+		height: 50px;
+		font-size: 18px;
+		background-color: #b5663b;
+		border: 2px solid #f6c491;
+		color: white;
+		border-radius: 5px;
+	}
+}

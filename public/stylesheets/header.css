@@ -1,17 +1,17 @@
-.reg_list {
-	list-style-type: none;
-	margin: 0;
-	padding: 0;
-	display: flex;
+.my_navbar {
+	background-image: linear-gradient(#a3a3a3, #bec3c5);
+	box-shadow: 2px 1px 3px rgb(170, 170, 170);
 }
-.reg_list li {
-	padding: 10px;
-	margin: 1px;
-	font-size: 22px;
-	color: black;
-	border: 1px solid black;
+
+.my_dropdown_menu {
+	background-image: linear-gradient(#d8d8d8, #cacaca);
+	box-shadow: 2px 1px 3px rgb(170, 170, 170);
 }
-.reg_list a {
-	outline: none;
-	text-decoration: none;
+
+.title_site {
+	font-size: 25px;
+}
+
+.my_nav_link {
+	font-size: 20px;
 }
