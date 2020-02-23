@@ -30,8 +30,11 @@ app.get('/', (req, res) => {
 	});
 });
 
-app.get('/testPost', (req, res) => {
-	res.render('testPost');
+app.post('/authorization', (req, res) => {
+	const { login, email, password, rePassword } = req.body;
+
+	console.log(login, email, password, rePassword);
+	res.json({ status: true, msg: 'Failed registration!' });
 });
 
 app.post('/testPost', (req, res) => {

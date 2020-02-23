@@ -23,12 +23,26 @@ export class AuthorizationController {
 
 	handlerSignUp() {
 		event.preventDefault();
-		this.view.renderSignUpModal(this.handlerRegistration.bind());
+		this.view.renderSignUpModal(this.handlerRegistration.bind(this));
 	}
 
-	handlerRegistration(ev) {
-		console.log(ev);
-
-		// this.model.regNewUser(newUser);
+	async handlerRegistration(ev) {
+		ev.preventDefault();
+		const response = await this.model.regUser(ev.target.elements);
+		if (response.status) {
+			this.view.closeModal(this.handlerRegistration.bind(this));
+		} else {
+			console.log(response.msg);
+		}
 	}
+
+	// async handlerAuthorization(ev) {
+	// 	ev.preventDefault();
+	// 	const response = await this.model.regNewUser(ev.target.elements);
+	// 	if (response.status) {
+	// 		this.view.closeModal(this.handlerRegistration.bind(this));
+	// 	} else {
+	// 		console.log(response.msg);
+	// 	}
+	// }
 }
