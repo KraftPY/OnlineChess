@@ -1,13 +1,23 @@
-const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+const { Schema, model } = require('mongoose');
 
 // создаем описание одной сущности User, которые будут храниться в коллекции БД
 const schema = new Schema({
 	login: {
 		type: String,
+		required: true,
+		unique: true
+	},
+	email: {
+		type: String,
+		required: true,
+		unique: true
+	},
+	password: {
+		type: String,
 		required: true
 	},
-	pass: String
+	firstName: String,
+	lastName: String
 });
 
-module.exports = mongoose.model('User', schema);
+module.exports = model('User', schema);
