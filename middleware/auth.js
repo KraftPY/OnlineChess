@@ -8,7 +8,7 @@ module.exports = (req, res, next) => {
   } else {
     jwt.verify(token, config.JWT_SECRED, (err, decoded) => {
       if (err) {
-        res.json({ status: false, msg: err.name });
+        res.json({ status: false, msg: err.name, fields: [] });
       } else {
         req.userData = decoded;
         next();

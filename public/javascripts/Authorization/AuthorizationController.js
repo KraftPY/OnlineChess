@@ -4,18 +4,25 @@ import { AuthorizationModel } from './AuthorizationModel.js';
 export class AuthorizationController {
 	constructor(publisher) {
 		this.view = new AuthorizationView({
-			handlerLogIn: this.handlerLogIn.bind(this),
-			handlerAccountSetting: this.handlerAccountSetting.bind(this),
-			handlerSignUp: this.handlerSignUp.bind(this),
-			handlerLogOut: this.handlerLogOut.bind(this),
-			handlerNoAccountSetting: this.handlerNoAccountSetting.bind(this),
+			handlerNoAuthMenu: this.handlerNoAuthMenu.bind(this),
+			handlerAuthMenu: this.handlerAuthMenu.bind(this),
+			handlerSubmenu: this.handlerSubmenu.bind(this),
+			handlerBody: this.handlerBody.bind(this),
 		});
 		this.model = new AuthorizationModel();
 		this.publisher = publisher;
-		this.start();
 	}
 
-	start() {
+	// ToDo list:
+	// 1) Убрать чтоб после авторизации не выпадало submenu
+	// 2) если на body отпустить клавишу мыши, то модальное окно закроется
+	// 3) после успешной регистрации или измен. настроек, при нажатии Enter срабатывает submit
+	// 
+
+
+
+
+	handlerSubmenu() {
 		if (this.model.authUser) {
 			const name = this.model.getUserFullName();
 			this.view.renderAuthMenu(name);
@@ -24,11 +31,48 @@ export class AuthorizationController {
 		}
 	}
 
-	// Registration
-	handlerSignUp() {
-		this.view.renderSignUpModal(this.handlerRegistration.bind(this));
+	handlerNoAuthMenu(ev) {
+		ev.preventDefault();
+		switch (true) {
+			case ev.target.dataset.name == 'log_in':
+				this.view.renderLogInModal(this.handlerAuthorization.bind(this), this.handlerCloseModal.bind(this));
+				this.view.closeSubmenu();
+				break;
+			case ev.target.dataset.name == 'no_setting':
+				this.view.renderLogInModal(this.handlerAuthorization.bind(this), this.handlerCloseModal.bind(this));
+				this.view.closeSubmenu();
+				break;
+			case ev.target.dataset.name == 'sign_in':
+				this.view.renderSignUpModal(this.handlerRegistration.bind(this), this.handlerCloseModal.bind(this));
+				this.view.closeSubmenu();
+				break;
+		}
 	}
 
+	handlerAuthMenu(ev) {
+		ev.preventDefault();
+		switch (true) {
+			case ev.target.dataset.name == 'setting':
+				this.view.closeSubmenu();
+				this.getSettingAndRenderSettingModal();
+				break;
+			case ev.target.dataset.name == 'log_out':
+				this.logOut();
+				break;
+		}
+	}
+
+	handlerBody(ev) {
+		const target = ev.target;
+		if (target.classList.contains('main_modal_auth')) {
+			this.view.closeModal();
+		} else if (!target.classList.contains('submenu_list') && !target.classList.contains('auth_btn')) {
+			this.view.closeSubmenu();
+		}
+	}
+
+
+	// Registration
 	handlerRegistration(ev) {
 		ev.preventDefault();
 		const regForm = ev.target.elements;
@@ -80,10 +124,6 @@ export class AuthorizationController {
 	}
 
 	// Authorization
-	handlerLogIn() {
-		this.view.renderLogInModal(this.handlerAuthorization.bind(this));
-	}
-
 	async handlerAuthorization(ev) {
 		ev.preventDefault();
 		const loginForm = ev.target.elements;
@@ -122,23 +162,107 @@ export class AuthorizationController {
 	}
 
 	// User settings
-	async	handlerAccountSetting() {
-		const response = await this.model.settingUser();
-		if (response.status) {
-			this.view.renderSettingModal(response.data);
+	async	handlerAccountSetting(ev) {
+		ev.preventDefault();
+		const regForm = ev.target.elements;
+		const regFields = {
+			firstName: regForm.firstName.value,
+			lastName: regForm.lastName.value,
+			email: regForm.email.value,
+			oldPassword: regForm.oldPassword.value,
+			newPassword: regForm.newPassword.value,
+			newRePassword: regForm.newRePassword.value,
+		};
+		const validRegForm = this.settingValidation(regFields);
+		if (validRegForm.status) {
+			this.sendSettingFormToServer(regFields, regForm);
 		} else {
-			this.handlerLogOut();
-			this.view.renderLogInModal(this.handlerAuthorization.bind(this));
+			this.view.showValidFields(regForm, validRegForm);
 		}
 	}
 
-	handlerNoAccountSetting() {
-		this.view.renderLogInModal(this.handlerAuthorization.bind(this));
+	async sendSettingFormToServer(regFields, regForm) {
+		const response = await this.model.postSettingUser(regFields);
+		if (response.msg == 'TokenExpiredError') {
+			this.view.closeModal();
+			this.logOut();
+			this.view.renderLogInModal();
+			this.view.closeSubmenu();
+		} else {
+			this.view.showValidFields(regForm, response);
+		}
+		// save change user settings to localStorage
+		if (response.status) {
+			const user = {
+				firstName: regFields.firstName,
+				lastName: regFields.lastName,
+				email: regFields.email,
+			};
+			this.model.changeUserSettings(user);
+			const name = this.model.getUserFullName();
+			this.view.renderAuthMenu(name);
+			this.view.closeSubmenu();
+		}
 	}
 
-	handlerLogOut() {
+	settingValidation(regFields) {
+		const { firstName, lastName, email, oldPassword, newPassword, newRePassword } = regFields;
+		let answ = {
+			status: true,
+			fields: []
+		};
+		// check valid first and last name
+		const patternName = /[A-Za-zА-Яа-яЁёІіЇїЄє-]+(\s+[A-Za-zА-Яа-яЁёІіЇїЄє-]+)?/;
+		if (firstName && !patternName.test(firstName)) {
+			answ.status = false;
+			answ.fields.push('firstName');
+		}
+		if (lastName && !patternName.test(lastName)) {
+			answ.status = false;
+			answ.fields.push('lastName');
+		}
+		// check valid email
+		const patternEmail = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+		if (!email || !patternEmail.test(email)) {
+			answ.status = false;
+			answ.fields.push('email');
+		}
+		// check valid password
+		if (!oldPassword && newPassword) {
+			answ.status = false;
+			answ.fields.push('oldPassword');
+		} else if (oldPassword && !newPassword) {
+			answ.status = false;
+			answ.fields.push('newPassword');
+		} else if (newPassword && newPassword.length < 5) {
+			answ.status = false;
+			answ.fields.push('newPassword');
+		} else if (newPassword !== newRePassword) {
+			answ.status = false;
+			answ.fields.push('newPassword', 'newRePassword');
+		}
+		return answ;
+	}
+
+	async getSettingAndRenderSettingModal() {
+		const response = await this.model.getSettingUser();
+		if (response.status) {
+			this.view.renderSettingModal(this.handlerAccountSetting.bind(this), this.handlerCloseModal.bind(this), response.data);
+			this.view.closeSubmenu();
+		} else {
+			this.logOut();
+			this.view.renderLogInModal(this.handlerAuthorization.bind(this), this.handlerCloseModal.bind(this));
+		}
+	}
+
+	handlerCloseModal() {
+		this.view.closeModal();
+	}
+
+
+	logOut() {
+		this.view.closeSubmenu();
 		this.model.clearAuth();
 		this.view.renderNoAuthMenu();
 	}
-
 }

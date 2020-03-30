@@ -3,9 +3,10 @@ import { AuthorizationTemplate } from './AuthorizationTemplate.js';
 export class AuthorizationView {
 	constructor(hendlers) {
 		this.handlers = hendlers;
-		this.mainMenu = document.querySelector('.account_drop_menu');
+		this.submenuBlock = document.querySelector('.auth_submenu');
+		this.authBtn = document.querySelector('.auth_btn');
 		this.modal = {
-			mainModal: document.createElement('div'),
+			mainModal: null,
 			loginForm: null,
 			signupForm: null,
 			settingForm: null,
@@ -14,7 +15,13 @@ export class AuthorizationView {
 	}
 
 	init() {
-		const { handlerLogIn, handlerNoAccountSetting, handlerAccountSetting, handlerSignUp, handlerLogOut } = this.handlers;
+		const { handlerNoAuthMenu, handlerAuthMenu, handlerSubmenu, handlerBody } = this.handlers;
+
+		this.authBtn.addEventListener('click', handlerSubmenu);
+
+		// create main modal
+		this.modal.mainModal = document.createElement('div');
+		this.modal.mainModal.classList.add('main_modal_auth');
 
 		// create 2 block with list menu
 		this.accDropMenu = {
@@ -24,89 +31,87 @@ export class AuthorizationView {
 		this.accDropMenu.auth.innerHTML = AuthorizationTemplate.getAuthList();
 		this.accDropMenu.noAuth.innerHTML = AuthorizationTemplate.getNoAuthList();
 
-		this.accDropMenu.noAuth.addEventListener('click', (ev) => {
-			ev.preventDefault();
-			switch (true) {
-				case ev.target.dataset.name == 'log_in':
-					handlerLogIn();
-					break;
-				case ev.target.dataset.name == 'no_setting':
-					handlerNoAccountSetting();
-					break;
-				case ev.target.dataset.name == 'sign_in':
-					handlerSignUp();
-					break;
-			}
-		});
+		this.accDropMenu.noAuth.addEventListener('click', handlerNoAuthMenu);
+		this.accDropMenu.auth.addEventListener('click', handlerAuthMenu);
 
-		this.accDropMenu.auth.addEventListener('click', (ev) => {
-			ev.preventDefault();
-			switch (true) {
-				case ev.target.dataset.name == 'setting':
-					handlerAccountSetting();
-					break;
-				case ev.target.dataset.name == 'log_out':
-					handlerLogOut();
-					break;
-			}
-		});
+		document.body.addEventListener('click', handlerBody);
 	}
 
 	renderNoAuthMenu() {
-		this.mainMenu.innerHTML = '';
-		this.mainMenu.append(this.accDropMenu.noAuth);
+		this.submenuBlock.innerHTML = '';
+		this.submenuBlock.classList.toggle('none');
+		this.submenuBlock.append(this.accDropMenu.noAuth);
 	}
 
 	renderAuthMenu(name) {
-		this.mainMenu.innerHTML = '';
-		this.mainMenu.append(this.accDropMenu.auth);
+		this.submenuBlock.innerHTML = '';
+		this.submenuBlock.classList.toggle('none');
+		this.submenuBlock.append(this.accDropMenu.auth);
 		document.querySelector('.user_name').innerHTML = `Hello, ${name}`;
 	}
 
-	renderLogInModal(handlerAuthorization) {
+	renderLogInModal(handlerAuthorization, handlerCloseModal) {
 		this.modal.mainModal.innerHTML = AuthorizationTemplate.getModalLogIn();
 		document.body.prepend(this.modal.mainModal);
-		this.modal.loginForm = document.querySelector('.login_form');
-		this.modal.loginForm.addEventListener('submit', handlerAuthorization);
+		const form = document.querySelector('.login_form');
+		const closeBtn = document.querySelectorAll('.close_form');
+		form.addEventListener('submit', handlerAuthorization);
+		closeBtn.forEach(btn => btn.addEventListener('click', handlerCloseModal));
 	}
 
-	renderSignUpModal(handlerRegistration) {
+	renderSignUpModal(handlerRegistration, handlerCloseModal) {
 		this.modal.mainModal.innerHTML = AuthorizationTemplate.getModalSignUp();
 		document.body.prepend(this.modal.mainModal);
-		this.modal.signupForm = document.querySelector('.signup_form');
-		this.modal.signupForm.addEventListener('submit', handlerRegistration);
+		const form = document.querySelector('.signup_form');
+		const closeBtn = document.querySelectorAll('.close_form');
+		form.addEventListener('submit', handlerRegistration);
+		closeBtn.forEach(btn => btn.addEventListener('click', handlerCloseModal));
 	}
 
-	renderSettingModal(data) {
-		this.modal.mainModal.innerHTML = AuthorizationTemplate.getTest();
-		// this.modal.mainModal.innerHTML = AuthorizationTemplate.getModalSignUp();
+	renderSettingModal(handlerAccountSetting, handlerCloseModal, userData) {
+		this.modal.mainModal.innerHTML = AuthorizationTemplate.getModalSetting(userData);
 		document.body.prepend(this.modal.mainModal);
-		// this.modal.settingForm = document.querySelector('.setting_form');
-
-		console.log(data);
+		const form = document.querySelector('.setting_form');
+		const closeBtn = document.querySelectorAll('.close_form');
+		form.addEventListener('submit', handlerAccountSetting);
+		closeBtn.forEach(btn => btn.addEventListener('click', handlerCloseModal));
 	}
 
 	showValidFields(formElem, response) {
-		[...formElem].forEach(el => el.classList.toggle('is-invalid', false));
-		response.fields.forEach(el => formElem[el].classList.add('is-invalid'));
+		// убираем у всех инпутов invalid css class
+		[...formElem].forEach(el => el.classList.toggle('invalid', false));
+		// скрыаем все блоки-подсказки
+		document.querySelectorAll('.invalid_feedback').forEach(el => el.classList.add('none'));
+		// добавляем инпутам которые не прошли валидации invalid и показывае блок-подсказку этого инпута
+		response.fields.forEach(el => {
+			formElem[el].classList.add('invalid');
+			if (this.modal.mainModal.children[0].dataset.name != 'login') {
+				formElem[el].nextElementSibling.classList.remove('none');
+			}
+		});
+		// выводим сообщение от сервера в блоке-статусе формы и меняем кнопки (только при создании нового аккаунта)
 		if (response.msg) {
-			const regStatus = document.querySelector('.srvMsg');
+			const regStatus = document.querySelector('.srv_msg');
 			regStatus.innerHTML = response.msg;
 			if (response.status) {
-				regStatus.classList.toggle('text-danger', false);
-				regStatus.classList.add('text-success');
-				if (this.modal.signupForm) {
+				regStatus.classList.toggle('text_error', false);
+				regStatus.classList.add('text_success');
+				if (this.modal.mainModal.children[0].dataset.name != 'login') {
 					document.querySelector('.btn_close').classList.remove('none');
-					document.querySelector('.btn_sign_up').classList.add('none');
+					document.querySelector('.btn_sign').classList.add('none');
 				}
 			} else {
-				regStatus.classList.toggle('text-success', false);
-				regStatus.classList.add('text-danger');
+				regStatus.classList.toggle('text_success', false);
+				regStatus.classList.add('text_error');
 			}
 		}
 	}
 
+	closeSubmenu() {
+		this.submenuBlock.classList.add('none');
+	}
+
 	closeModal() {
-		document.querySelector('.close').click();
+		this.modal.mainModal.remove();
 	}
 }

@@ -5,6 +5,7 @@ export class AuthorizationModel {
 	}
 
 	getUserFullName() {
+
 		if (this.authUser.firstName) {
 			return `${this.authUser.firstName} ${this.authUser.lastName}`;
 		} else {
@@ -54,7 +55,7 @@ export class AuthorizationModel {
 		this.token = null;
 	}
 
-	settingUser() {
+	getSettingUser() {
 		return fetch('/setting', {
 			method: 'GET',
 			headers: {
@@ -62,6 +63,22 @@ export class AuthorizationModel {
 			}
 		})
 			.then(res => res.json());
+	}
 
+	postSettingUser(data) {
+		return fetch('/change-setting', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+				'Authorization': this.token,
+			},
+			body: JSON.stringify(data),
+		})
+			.then(res => res.json());
+	}
+
+	changeUserSettings(user) {
+		localStorage.setItem('user', JSON.stringify(user));
+		this.authUser = user;
 	}
 }

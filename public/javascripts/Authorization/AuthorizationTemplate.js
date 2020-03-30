@@ -1,182 +1,139 @@
 export class AuthorizationTemplate {
 	static getModalLogIn() {
-		return `
-		<div class="auth_modal modal fade" id="exampleModalCenter" tabindex="-1" role="dialog"
-		aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-			<div class="modal-dialog modal-dialog-centered" role="document">
-			<div class="modal-content">
-				<div class="modal-header" style="border: 0px;">
-					<h5 class="modal-title h3" id="exampleModalCenterTitle">Login</h5>
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-						<span aria-hidden="true">&times;</span>
-					</button>
-				</div>
-				<div class="modal-body">
-				<p class="srvMsg ml-3 mb-2"></p>
-					<form class="login_form" novalidate>
-						<div class="col-auto">
-							<div class="input-group">
-								<div class="input-group-prepend">
-									<div class="input-group-text"><i class="far fa-user"></i></div>
-								</div>
-								<input type="text" class="form-control" id="auth_login" placeholder="Please enter user name" name="login"/>
-							</div>
-						</div>
-						<div class="col-auto my-3">
-							<div class="input-group">
-								<div class="input-group-prepend">
-									<div class="input-group-text"><i class="fas fa-unlock-alt"></i></div>
-								</div>
-								<input type="password" class="form-control" id="auth_password" placeholder="Please enter password" name="password"/>
-							</div>
-						</div>
-						<div class="form-check">
-							<input class="form-check-input" type="checkbox" id="checkRemember" />
-							<label class="form-check-label" for="inlineFormCheck">
-								Remember me
-							</label>
-						</div>
-						<div class="float-right mt-3">
-							<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-							<button type="submit" class="btn_login btn btn-primary">Log In</button>
-						</div>
-					</form>
-				</div>
-			</div>
+		return `<div class="auth_modal" data-name="login">
+		<div class="title_block">
+			<h5 class="title_modal">Login</h5>
+			<button class="close_btn close_form">&times;</button>
 		</div>
+		<p class="srv_msg"></p>
+		<form class="login_form">
+			<div class="input_group">
+				<div class="prepend_ico"><i class="far fa-user"></i></div>
+				<input type="text" class="input_group_inp" id="auth_login" placeholder="Please enter user name" name="login" />
+			</div>
+			<div class="input_group">
+				<div class="prepend_ico"><i class="fas fa-unlock-alt"></i></div>
+				<input type="password" class="input_group_inp" id="auth_password" placeholder="Please enter password"
+					name="password" />
+			</div>
+			<div class="btn_group">
+				<button type="button" class="close_form btn-secondary">Close</button>
+				<button type="submit" class="btn_login btn-primary">Log In</button>
+			</div>
+		</form>
 	</div>`;
 	}
 
 	static getModalSignUp() {
-		return `			
-		<div class="auth_modal modal fade" id="exampleModalCenter" tabindex="-1" role="dialog"
-		aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-			<div class="modal-dialog modal-dialog-centered" role="document">
-			<div class="modal-content">
-				<div class="modal-header">
-					<div class="d-flex flex-column">
-						<h5 class="modal-title h2" id="exampleModalCenterTitle">Create an account</h5>
-						<p class="srvMsg"></p>
-					</div>
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-						<span aria-hidden="true">&times;</span>
-					</button>
-				</div>
-				<div class="modal-body">
-					<form class="signup_form" novalidate>
-						<div class="form-group">
-							<label for="sign_up_login">Login</label>
-							<input type="text" class="form-control my-2" id="sign_up_login" name="login"/>
-							<div class="invalid-feedback">Login length from 3 to 16 characters!</div>
-						</div>
-						<div class="form-group">
-							<label for="sign_up_email">Email address</label>
-							<input type="email" class="form-control my-2" id="sign_up_email"  name="email"/>
-							<div class="invalid-feedback">Not email format</div>
-						</div>
-						<div class="form-group">
-							<label for="sign_up_password">Password</label>
-							<input type="password" class="form-control my-2" id="sign_up_password"  name="password"/>
-							<div class="invalid-feedback">Password must be more than 5 characters</div>
-						</div>
-						<div class="form-group">
-							<label for="sign_up_re_password">Re-enter password</label>
-							<input type="password" class="form-control my-2" id="sign_up_re_password" name="rePassword"/>
-							<div class="invalid-feedback">Passwords do not match</div>
-						</div>
-						<button type="submit" class="btn_sign_up btn btn-primary">Create a new account</button>
-						<button class="btn_close btn btn-success none float-right" data-dismiss="modal">Close</button>
-					</form>
-				</div>
-			</div>
+		return `<div class="auth_modal" data-name="signup">
+		<div class="title_block">
+			<h5 class="title_modal">Create an account</h5>
+			<button class="close_btn close_form">&times;</button>
 		</div>
+		<p class="srv_msg"></p>
+		<form class="signup_form" novalidate>
+			<div class="form_group_col">
+				<label for="sign_up_login">Login</label>
+				<input type="text" class="form_group_inp" id="sign_up_login" name="login" />
+				<div class="invalid_feedback none">Login length from 3 to 16 characters!</div>
+			</div>
+			<div class="form_group_col">
+				<label for="sign_up_email">Email address</label>
+				<input type="email" class="form_group_inp" id="sign_up_email" name="email" />
+				<div class="invalid_feedback none">Not email format</div>
+			</div>
+			<div class="form_group_col">
+				<label for="sign_up_password">Password</label>
+				<input type="password" class="form_group_inp" id="sign_up_password" name="password" />
+				<div class="invalid_feedback none">Password must be more than 5 characters</div>
+			</div>
+			<div class="form_group_col">
+				<label for="sign_up_re_password">Re-enter password</label>
+				<input type="password" class="form_group_inp" id="sign_up_re_password" name="rePassword" />
+				<div class="invalid_feedback none">Passwords do not match</div>
+			</div>
+			<div class="btn_group">
+				<button type="button" class="close_form btn_close none">Close</button>
+				<button type="submit" class="btn_sign btn-primary">Create a new account</button>
+			</div>
+		</form>
 	</div>`;
 	}
 
 	static getNoAuthList() {
-		return `<a class=" log_in_link my_nav_link dropdown-item" data-toggle="modal" data-target="#exampleModalCenter" data-name="log_in"><i
-				class="fas fa-sign-in-alt"></i>&nbsp;&nbsp;Log In</a>
-		<a class="no_account_setting_link my_nav_link dropdown-item" data-toggle="modal" data-target="#exampleModalCenter" data-name="no_setting"><i class="fas fa-user-cog"></i>&nbsp;&nbsp;Account
-				settings</a>
-		<div class="dropdown-divider"></div>
-		<a class="sign_up_link my_nav_link dropdown-item" data-toggle="modal" data-target="#exampleModalCenter" data-name="sign_in"><i
-				class="fas fa-user-plus"></i>&nbsp;&nbsp;Create account</a>
-		`;
+		return `<ul class="submenu_list">
+		<li data-name="log_in"><i class="fas fa-sign-in-alt"></i>&nbsp;&nbsp;Log In</li>
+		<li data-name="no_setting"><i class="fas fa-user-cog"></i>&nbsp;&nbsp;Account setting</li>
+		<hr />
+		<li data-name="sign_in"><i class="fas fa-user-plus"></i>&nbsp;&nbsp;Create account</li>
+	</ul>`;
 	}
 
 	static getAuthList() {
-		return `<p class="text-center user_name"></p>
-		<div class="dropdown-divider"></div>
-		<a class="account_setting_link my_nav_link dropdown-item" data-name="setting"><i class="fas fa-user-cog"></i>&nbsp;&nbsp;Account
-			settings</a>
-		<a class="logout_link my_nav_link dropdown-item" data-name="log_out"><i
-				class="fas fa-sign-out-alt"></i>&nbsp;&nbsp;Log out</a>`;
+		return `<ul class="submenu_list">
+		<p class="user_name"></p>
+		<li data-name="setting"><i class="fas fa-user-cog"></i>&nbsp;&nbsp;Account settings</li>
+		<hr />
+		<li data-name="log_out"><i class="fas fa-sign-out-alt"></i>&nbsp;&nbsp;Log out</li>
+	</ul>`;
 	}
 
-	static getModalSetting() {
-		return `			
-		<div class="setting_modal modal fade" id="exampleModalCenter" tabindex="-1" role="dialog"
-		aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-			<div class="modal-dialog modal-dialog-centered" role="document">
-			<div class="modal-content">
-				<div class="modal-header">
-					<div class="d-flex flex-column">
-						<h5 class="modal-title h2" id="exampleModalCenterTitle">Account setting</h5>
-					</div>
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-						<span aria-hidden="true">&times;</span>
-					</button>
-				</div>
-				<div class="modal-body">
-					<form class="signup_form" novalidate>
-						<div class="form-group">
-							<label for="sign_up_login">Login</label>
-							<input type="text" class="form-control my-2" id="sign_up_login" name="login" />
-							<div class="invalid-feedback">Login length from 3 to 16 characters!</div>
-						</div>
-						<div class="form-group">
-							<label for="sign_up_email">Email address</label>
-							<input type="email" class="form-control my-2" id="sign_up_email"  name="email"/>
-							<div class="invalid-feedback">Not email format</div>
-						</div>
-						<div class="form-group">
-							<label for="sign_up_password">Password</label>
-							<input type="password" class="form-control my-2" id="sign_up_password"  name="password"/>
-							<div class="invalid-feedback">Password must be more than 5 characters</div>
-						</div>
-						<div class="form-group">
-							<label for="sign_up_re_password">Re-enter password</label>
-							<input type="password" class="form-control my-2" id="sign_up_re_password" name="rePassword"/>
-							<div class="invalid-feedback">Passwords do not match</div>
-						</div>
-						<button type="submit" class="btn_sign_up btn btn-primary">Create a new account</button>
-						<button class="btn_close btn btn-success none float-right" data-dismiss="modal">Close</button>
-					</form>
+	static getModalSetting({ email, firstName, lastName }) {
+		return `<div class="setting_modal" data-name="accSetting">
+		<div class="title_block">
+			<h5 class="title_modal">Account setting</h5>
+			<button class="close_btn close_form">&times;</button>
+		</div>
+		<p class="srv_msg"></p>
+		<form class="setting_form" novalidate>
+			<div class="form_group_row">
+				<label for="first_name">First name:</label>
+				<div class="groupe_feedback_input">
+					<input type="text" class="form_group_inp" id="first_name" name="firstName" value="${firstName}"/>
+					<div class="invalid_feedback none">First name must contain only letters!</div>
 				</div>
 			</div>
-		</div>
+			<div class="form_group_row">
+				<label for="last_name">Last name:</label>
+				<div class="groupe_feedback_input">
+					<input type="text" class="form_group_inp" id="last_name" name="lastName" value="${lastName}" />
+					<div class="invalid_feedback none">Last name must contain only letters!</div>
+				</div>
+			</div>
+			<div class="form_group_row">
+				<label for="setting_email">Email address:</label>
+				<div class="groupe_feedback_input">
+					<input type="email" class="form_group_inp" id="setting_email" name="email" value="${email}" />
+					<div class="invalid_feedback none">Not email format</div>
+				</div>
+			</div>
+			<div class="form_group_row">
+				<label for="old_password">Old password:</label>
+				<div class="groupe_feedback_input">
+					<input type="password" class="form_group_inp" id="old_password" name="oldPassword" />
+					<div class="invalid_feedback none">The password is incorrect</div>
+				</div>
+			</div>
+			<div class="form_group_row">
+				<label for="setting_new_password">Password:</label>
+				<div class="groupe_feedback_input">
+					<input type="password" class="form_group_inp" id="setting_new_password" name="newPassword" />
+					<div class="invalid_feedback none">The password must be more than 5 characters</div>
+				</div>
+			</div>
+			<div class="form_group_row">
+				<label for="setting_new_re_password">Re-enter password:</label>
+				<div class="groupe_feedback_input">
+					<input type="password" class="form_group_inp" id="setting_new_re_password" name="newRePassword" />
+					<div class="invalid_feedback none">The passwords do not match</div>
+				</div>
+			</div>
+			<div class="btn_group">
+				<button type="button" class="close_form btn_close none">Close</button>
+				<button type="submit" class="btn_sign btn-primary">Change setting</button>
+			</div>
+		</form>
 	</div>`;
 	}
 
-	static getTest() {
-		return `<div class="modal" tabindex="-1" role="dialog">
-		<div class="modal-dialog" role="document">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h5 class="modal-title">Modal title</h5>
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-						<span aria-hidden="true">&times;</span>
-					</button>
-				</div>
-				<div class="modal-body">
-					<p>Modal body text goes here.</p>
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-					<button type="button" class="btn btn-primary">Save changes</button>
-				</div>
-			</div>
-		</div>
-	</div>`;
-	}
 }
