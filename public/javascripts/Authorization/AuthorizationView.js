@@ -11,17 +11,19 @@ export class AuthorizationView {
 			signupForm: null,
 			settingForm: null,
 		};
+		this.isOpenSubMenu = false;
 		this.init();
 	}
 
 	init() {
-		const { handlerNoAuthMenu, handlerAuthMenu, handlerSubmenu, handlerBody } = this.handlers;
+		const { handlerNoAuthMenu, handlerAuthMenu, handlerSubmenu, handlerMainModal, handlerBody } = this.handlers;
 
 		this.authBtn.addEventListener('click', handlerSubmenu);
 
 		// create main modal
 		this.modal.mainModal = document.createElement('div');
 		this.modal.mainModal.classList.add('main_modal_auth');
+		this.modal.mainModal.addEventListener('mousedown', handlerMainModal);
 
 		// create 2 block with list menu
 		this.accDropMenu = {
@@ -34,13 +36,15 @@ export class AuthorizationView {
 		this.accDropMenu.noAuth.addEventListener('click', handlerNoAuthMenu);
 		this.accDropMenu.auth.addEventListener('click', handlerAuthMenu);
 
-		document.body.addEventListener('click', handlerBody);
+		// add eventlistener on body for close submenu
+		document.body.addEventListener('mousedown', handlerBody);
 	}
 
 	renderNoAuthMenu() {
 		this.submenuBlock.innerHTML = '';
 		this.submenuBlock.classList.toggle('none');
 		this.submenuBlock.append(this.accDropMenu.noAuth);
+		this.isOpenSubMenu = true;
 	}
 
 	renderAuthMenu(name) {
@@ -48,6 +52,7 @@ export class AuthorizationView {
 		this.submenuBlock.classList.toggle('none');
 		this.submenuBlock.append(this.accDropMenu.auth);
 		document.querySelector('.user_name').innerHTML = `Hello, ${name}`;
+		this.isOpenSubMenu = true;
 	}
 
 	renderLogInModal(handlerAuthorization, handlerCloseModal) {
@@ -109,6 +114,7 @@ export class AuthorizationView {
 
 	closeSubmenu() {
 		this.submenuBlock.classList.add('none');
+		this.isOpenSubMenu = false;
 	}
 
 	closeModal() {

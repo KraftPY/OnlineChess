@@ -8,7 +8,7 @@ router.post('/change-setting', middleAuth, async (req, res) => {
   const user = await User.findOne({ _id: req.userData.id });
   const { firstName, lastName, email, oldPassword, newPassword, newRePassword } = req.body;
   const patternEmail = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-  const patternName = /[A-Za-zА-Яа-яЁёІіЇїЄє-]+(\s+[A-Za-zА-Яа-яЁёІіЇїЄє-]+)?/;
+  const patternName = /([A-Za-zА-Яа-яЁёІіЇїЄє-]{1,50})+((\s+([A-Za-zА-Яа-яЁёІіЇїЄє-]{1,50})+)?)+/;
 
   switch (true) {
     case !patternName.test(firstName) || !patternName.test(lastName):
@@ -51,9 +51,9 @@ router.post('/change-setting', middleAuth, async (req, res) => {
         _id: req.userData.id
       }, {
         $set: {
-          firstName,
-          lastName,
-          email,
+          firstName: firstName.replace(/\s+/g, ' ').trim(),
+          lastName: lastName.replace(/\s+/g, ' ').trim(),
+          email: email.replace(/\s+/g, ' ').trim(),
           password: (newPassword) ? bcrypt.hashSync(newPassword, bcrypt.genSaltSync(10)) : user.password,
         }
       }).then(() => {

@@ -7,6 +7,7 @@ export class AuthorizationController {
 			handlerNoAuthMenu: this.handlerNoAuthMenu.bind(this),
 			handlerAuthMenu: this.handlerAuthMenu.bind(this),
 			handlerSubmenu: this.handlerSubmenu.bind(this),
+			handlerMainModal: this.handlerMainModal.bind(this),
 			handlerBody: this.handlerBody.bind(this),
 		});
 		this.model = new AuthorizationModel();
@@ -62,15 +63,19 @@ export class AuthorizationController {
 		}
 	}
 
-	handlerBody(ev) {
+	handlerMainModal(ev) {
 		const target = ev.target;
-		if (target.classList.contains('main_modal_auth')) {
-			this.view.closeModal();
-		} else if (!target.classList.contains('submenu_list') && !target.classList.contains('auth_btn')) {
-			this.view.closeSubmenu();
-		}
+		(target.classList.contains('main_modal_auth')) ? this.view.closeModal() : false;
 	}
 
+	handlerBody(ev) {
+		const target = ev.target;
+		if (this.view.isOpenSubMenu) {
+			if (!target.classList.contains('submenu_list') && !target.parentElement.classList.contains('submenu_list')) {
+				this.view.closeSubmenu();
+			}
+		}
+	}
 
 	// Registration
 	handlerRegistration(ev) {
@@ -101,8 +106,9 @@ export class AuthorizationController {
 			status: true,
 			fields: []
 		};
+		const patternNoHTML = /<|>/g;
 		// check valid login
-		if (!login || login.length < 3 || login.length > 16) {
+		if (!login || login.length < 3 || login.length > 16 || patternNoHTML.test(login)) {
 			answ.status = false;
 			answ.fields.push('login');
 		}
@@ -212,12 +218,14 @@ export class AuthorizationController {
 			fields: []
 		};
 		// check valid first and last name
-		const patternName = /[A-Za-zА-Яа-яЁёІіЇїЄє-]+(\s+[A-Za-zА-Яа-яЁёІіЇїЄє-]+)?/;
-		if (firstName && !patternName.test(firstName)) {
+		// [A-Za-zА-Яа-яЁёІіЇїЄє-]{1,50}
+		const patternName = /([A-Za-zА-Яа-яЁёІіЇїЄє-]{1,50})+((\s+([A-Za-zА-Яа-яЁёІіЇїЄє-]{1,50})+)?)+/;
+		const patternNoHTML = /<|>/g;
+		if (firstName && (!patternName.test(firstName) || patternNoHTML.test(firstName))) {
 			answ.status = false;
 			answ.fields.push('firstName');
 		}
-		if (lastName && !patternName.test(lastName)) {
+		if (lastName && (!patternName.test(lastName) || patternNoHTML.test(lastName))) {
 			answ.status = false;
 			answ.fields.push('lastName');
 		}
@@ -261,8 +269,8 @@ export class AuthorizationController {
 
 
 	logOut() {
+		this.view.renderNoAuthMenu();
 		this.view.closeSubmenu();
 		this.model.clearAuth();
-		this.view.renderNoAuthMenu();
 	}
 }

@@ -39,9 +39,9 @@ router.post('/registration', (req, res) => {
     default:
 
       User.create({
-        login: login,
+        login: login.replace(/\s+/g, ' ').trim(),
         password: bcrypt.hashSync(password, bcrypt.genSaltSync(10)),
-        email: email,
+        email: email.replace(/\s+/g, ' ').trim(),
         firstName: '',
         lastName: '',
       }).then(() => res.json({ status: true, msg: 'Registration successful!', fields: [] }))
