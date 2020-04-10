@@ -4,8 +4,13 @@ const app = require('./app');
 // подкл. config с нужными настройками для дальнейшей работы
 const config = require('./config');
 
+// подкл. socket.io
+const server = require('http').Server(app);
+const io = require('socket.io')(server);
+
 // подкл. monegoose для работы с БД MongoDB
 const database = require('./database');
+
 
 // пробуем подлючиться к нашей БД
 database()
@@ -15,10 +20,17 @@ database()
 		);
 
 		// если подключились к БД, тогда запускаем наше приложение
-		app.listen(config.PORT, () => {
+		server.listen(config.PORT, () => {
 			console.log(`Example app listening on port ${config.PORT}!`);
 		});
 	})
 	.catch(() => {
 		console.log('No database connection!');
 	});
+
+io.on('connection', function (socket) {
+	socket.emit('news', { hello: 'world' });
+	socket.on('my other event', function (data) {
+		console.log(data);
+	});
+});
