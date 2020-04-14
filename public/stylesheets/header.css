@@ -80,7 +80,7 @@
 
 /* Modal */
 
-.main_modal_auth{
+.main_modal{
   display: flex;
 	flex-direction: column;
 	justify-content: center;

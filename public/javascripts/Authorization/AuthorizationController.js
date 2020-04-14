@@ -71,9 +71,14 @@ export class AuthorizationController {
 	handlerBody(ev) {
 		const target = ev.target;
 		if (this.view.isOpenSubMenu) {
-			if (!target.classList.contains('submenu_list') && !target.parentElement.classList.contains('submenu_list')) {
+			if (!target.classList.contains('submenu_list') &&
+				!target.parentElement.classList.contains('submenu_list') &&
+				!target.classList.contains('auth_btn') &&
+				!target.parentElement.classList.contains('auth_btn')) {
 				this.view.closeSubmenu();
 			}
+		} else if (target.classList.contains('main_modal')) {
+			this.view.closeModal();
 		}
 	}
 

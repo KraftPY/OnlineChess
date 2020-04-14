@@ -8,14 +8,14 @@ import { AuthorizationController } from './Authorization/AuthorizationController
 // ---------------------Start-------------------------------
 
 const publisher = new PubSub();
-// const newGame = new ControllerStartGame(publisher);
+const newGame = new ControllerStartGame(publisher);
 const authorization = new AuthorizationController(publisher);
 const chessBoard = new ControllerChessBoard(publisher);
 const historyOfMoves = new ControllerHistoryOfMoves(publisher);
 
-const socket = io.connect();
+// const socket = io.connect();
 
-socket.on('news', function (data) {
-  console.log(data);
-  socket.emit('my other event', { my: 'data' });
-});
+// socket.on('news', function (data) {
+//   console.log(data);
+//   socket.emit('my other event', { my: 'data' });
+// });

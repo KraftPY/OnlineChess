@@ -20,7 +20,7 @@ export class ViewHistoryOfMoves {
 		} else {
 			listElement.innerHTML = `${fPieceName} (${firstPiece.color}) - ${symbol[previousPos.x - 1]}${
 				number[previousPos.y - 1]
-			} move to ${symbol[firstPiece.pos.x - 1]}${number[firstPiece.pos.y - 1]}`;
+				} move to ${symbol[firstPiece.pos.x - 1]}${number[firstPiece.pos.y - 1]}`;
 			if (secondPiece && firstPiece.color != secondPiece.color) {
 				let sPieceName = secondPiece.pieceName[0].toUpperCase() + secondPiece.pieceName.slice(1),
 					// if en passant
@@ -66,5 +66,9 @@ export class ViewHistoryOfMoves {
 		} else {
 			return false;
 		}
+	}
+
+	clearListMoves() {
+		this.dom.listMoves.innerHTML = '';
 	}
 }

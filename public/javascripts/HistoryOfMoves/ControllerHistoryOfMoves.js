@@ -8,6 +8,11 @@ export class ControllerHistoryOfMoves {
 		this.publisher = publisher;
 		this.publisher.subscribe('moveEnd', this.addNewMove.bind(this));
 		this.publisher.subscribe('loadGame', this.loadGame.bind(this));
+		this.publisher.subscribe('startPracticeGame', this.newPracticeGame.bind(this));
+	}
+
+	newPracticeGame() {
+		this.view.clearListMoves();
 	}
 
 	addNewMove() {
@@ -26,6 +31,7 @@ export class ControllerHistoryOfMoves {
 	}
 
 	loadGame() {
+		this.view.clearListMoves();
 		const allHistoryMoves = this.model.getAllMoveFromLS();
 		allHistoryMoves.forEach((el) => {
 			this.view.addNewMoveToList(el);

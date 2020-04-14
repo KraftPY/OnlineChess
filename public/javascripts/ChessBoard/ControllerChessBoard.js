@@ -7,17 +7,20 @@ export class ControllerChessBoard {
 		this.model = new ModelChessBoard();
 		this.publisher = publisher;
 		this.publisher.subscribe('moveBack', this.moveBackToHistory.bind(this));
-		this.publisher.subscribe('startNewGame', this.newGame.bind(this));
+		this.publisher.subscribe('startPracticeGame', this.newGame.bind(this));
 		this.publisher.subscribe('startLoadGame', this.loadGame.bind(this));
 		this.tempPieces = { first: null, second: null };
 	}
 
 	newGame() {
+		this.view.removeAllPieces(this.model.arrChessPieces);
 		let arrNewPiece = this.view.renderNewGame();
 		this.model.createNewChessPiece(arrNewPiece, true);
+		(this.model.whoseMoveNow != 'white') ? this.model.changeWhoseMove() : false;
 	}
 
 	loadGame() {
+		this.view.removeAllPieces(this.model.arrChessPieces);
 		const lastMove = this.model.getSaveGame();
 		if (lastMove) {
 			const arrLoadPiece = this.view.renderSaveGame(lastMove);
@@ -34,7 +37,8 @@ export class ControllerChessBoard {
 		const saveMove = this.model.getSaveGame(numMove);
 		const chessPiece = saveMove.tempPieces.first;
 		chessPiece.color == this.model.whoseMoveNow ? this.model.changeWhoseMove() : false;
-		const newArrChess = this.view.renderSaveGame(saveMove, this.model.arrChessPieces);
+		this.view.removeAllPieces(this.model.arrChessPieces);
+		const newArrChess = this.view.renderSaveGame(saveMove);
 		this.model.createNewChessPiece(newArrChess);
 		this.view.clearChessBoard(this.model.arrDomNodesChessPiece);
 
@@ -271,6 +275,8 @@ export class ControllerChessBoard {
 				break;
 			//	Если до этого не было шаха и после хода король пользователя попал под шах, отменяем ход
 			case !this.model.isCheckedNow && this.view.checkCssClass(userKing.div, 'figure_kill'):
+				this.moveBack(userKing);
+				break;
 			//	Если был шах и после хода король пользователя остался под шахом, отменяем ход
 			case this.model.isCheckedNow && this.view.checkCssClass(userKing.div, 'figure_kill'):
 				this.moveBack(userKing);
@@ -345,7 +351,7 @@ export class ControllerChessBoard {
 
 	getMovesPiece({ pieceName, pos, color }) {
 		switch (pieceName) {
-			case 'king': // -------------------------------- King ----------------------------------
+			case 'king': {// -------------------------------- King ----------------------------------
 				let arrMovesKing = [];
 
 				if (pos.y > 1 && pos.y < 8 && pos.x > 1 && pos.x < 8) {
@@ -388,8 +394,8 @@ export class ControllerChessBoard {
 					arrMovesKing.push({ y: 7, x: 1 }, { y: 7, x: 2 }, { y: 8, x: 2 });
 				}
 				return { color, arrMoveCells: arrMovesKing };
-
-			case 'queen': // -------------------------------- Queen ----------------------------------
+			}
+			case 'queen': {// -------------------------------- Queen ----------------------------------
 				let arrMovesQueen = [],
 					diffNum = null;
 
@@ -485,8 +491,8 @@ export class ControllerChessBoard {
 					}
 				}
 				return { color, arrMoveCells: arrMovesQueen };
-
-			case 'rook': // -------------------------------- Rook ----------------------------------
+			}
+			case 'rook': {// -------------------------------- Rook ----------------------------------
 				let arrMovesRook = [];
 
 				// up move
@@ -526,8 +532,8 @@ export class ControllerChessBoard {
 				}
 
 				return { color, arrMoveCells: arrMovesRook };
-
-			case 'bishop': // -------------------------------- Bishop ----------------------------------
+			}
+			case 'bishop': {// -------------------------------- Bishop ----------------------------------
 				let arrMovesBishop = [],
 					diffNum1 = null;
 				// up-left move
@@ -587,8 +593,8 @@ export class ControllerChessBoard {
 				}
 
 				return { color, arrMoveCells: arrMovesBishop };
-
-			case 'knight': // -------------------------------- Knight ----------------------------------
+			}
+			case 'knight': {// -------------------------------- Knight ----------------------------------
 				let arrMovesKnight = [];
 
 				// up move
@@ -615,8 +621,8 @@ export class ControllerChessBoard {
 				else if (pos.x < 7 && pos.y == 8) arrMovesKnight.push({ y: pos.y - 1, x: pos.x + 2 });
 				else if (pos.x < 7 && pos.y == 1) arrMovesKnight.push({ y: pos.y + 1, x: pos.x + 2 });
 				return { color, arrMoveCells: arrMovesKnight };
-
-			case 'pawn': // -------------------------------- Pawn ----------------------------------
+			}
+			case 'pawn': {// -------------------------------- Pawn ----------------------------------
 				let arrMovesPawn = [],
 					arrKillCells = [];
 				//
@@ -641,6 +647,7 @@ export class ControllerChessBoard {
 					else arrKillCells.push({ y: pos.y + 1, x: pos.x - 1 }, { y: pos.y + 1, x: pos.x + 1 });
 				}
 				return { color, arrMoveCells: arrMovesPawn, arrKillCells };
+			}
 		}
 	}
 }

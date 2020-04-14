@@ -22,7 +22,7 @@ export class AuthorizationView {
 
 		// create main modal
 		this.modal.mainModal = document.createElement('div');
-		this.modal.mainModal.classList.add('main_modal_auth');
+		this.modal.mainModal.classList.add('main_modal');
 		this.modal.mainModal.addEventListener('mousedown', handlerMainModal);
 
 		// create 2 block with list menu

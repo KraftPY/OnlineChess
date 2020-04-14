@@ -78,19 +78,7 @@ export class ViewChessBoard {
 		alert('Нет сохраненной игры!');
 	}
 
-	renderSaveGame(saveGame, arrChessPieces = null) {
-		// удаляем все фигуры с доски и их слушатели
-		if (arrChessPieces != null) {
-			arrChessPieces.forEach((el) => {
-				el.div.removeEventListener('click', this.clickChessPiece);
-				el.div.remove();
-			});
-			// если загрузка сохраненой игры
-		} else {
-			// Listener на пустые ячейки шахматной доски
-			this.dom.chessBoard.addEventListener('click', this.clickEmptyCell);
-		}
-
+	renderSaveGame(saveGame) {
 		return saveGame.arrChessPieces.map((el) => {
 			el.div = document.createElement('div');
 			el.div.classList.add(`${el.pieceName}_${el.color}`);
@@ -233,6 +221,20 @@ export class ViewChessBoard {
 				first.pos.x = x;
 				first.pos.y = y - 1;
 			}
+		}
+	}
+
+	removeAllPieces(arrChessPieces = null) {
+		// удаляем все фигуры с доски и их слушатели
+		if (arrChessPieces != null) {
+			arrChessPieces.forEach((el) => {
+				el.div.removeEventListener('click', this.clickChessPiece);
+				el.div.remove();
+			});
+			// если загрузка сохраненой игры
+		} else {
+			// Listener на пустые ячейки шахматной доски
+			this.dom.chessBoard.addEventListener('click', this.clickEmptyCell);
 		}
 	}
 

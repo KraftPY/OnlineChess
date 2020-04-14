@@ -1,0 +1,212 @@
+.modal_new_game{
+  width: 450px;
+  height: 600px;
+  background-color: rgba(255, 255, 255);
+  border-radius: 15px;
+  position: relative;
+}
+
+.btn_close_modal_newgame{
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  border: none;
+  border-radius: 50%;
+  top: -10px;
+  right: -10px;
+  background-color: rgba(255, 255, 255);
+  font-size: 20px;
+  outline: none;
+  line-height: 30px;
+  cursor: pointer;
+}
+
+.btn_close_modal_newgame:hover{
+  background-color: rgb(189, 189, 189);
+}
+
+.tabs_group{
+  display: flex;
+  height: 50px;
+}
+
+.tabs_group input{
+  display: none;
+}
+
+.left_label, .right_label{
+  width: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  background-color: rgb(230, 230, 230);
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.left_label{
+  border-top-left-radius: 15px;
+}
+
+.right_label{
+  border-top-right-radius: 15px;
+}
+
+.checked_tab{
+  background-color: rgb(255, 255, 255);
+}
+
+.blc_content{
+  width: 100%;
+  height: calc(100% - 50px);
+  border-bottom-left-radius: 15px;
+  border-bottom-right-radius: 15px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.with_opponent{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.create_practice_game{
+  width: 200px;
+  height: 35px;
+  border-radius: 10px;
+  box-shadow: none;
+  outline: none;
+  background-color: rgb(65, 161, 65);
+  color: white;
+  border: none;
+  margin: 40px 0px 40px 0px;
+  box-shadow: 2px 2px 2px rgb(50, 119, 50);
+  cursor: pointer;
+}
+
+.create_practice_game:active{
+  box-shadow: -2px -2px 2px rgb(50, 119, 50);
+}
+
+
+/* Table */
+.table_container{
+  overflow-y: auto;
+  max-height: 270px;
+}
+
+.created_games_list{
+  border-collapse: collapse;
+  width: 400px;
+}
+
+.created_games_list thead th{
+  position: sticky;
+  top: 0;
+  vertical-align: middle;
+}
+
+.created_games_list td{
+  border: 2px dotted rgb(255, 255, 255);
+  padding: 5px;
+  background-color: rgb(219, 219, 219);
+}
+
+.created_games_list th:first-child, td:first-child{
+  width: 30px;
+  text-align: center;
+}
+
+.created_games_list th:last-child, td:last-child{
+  width: 35px;
+  text-align: center;
+}
+
+.created_games_list th{
+  height: 30px;
+  font-weight: 600;
+  background-color: rgb(173, 173, 173);
+  border-left: 2px solid rgb(255, 255, 255);
+  border-right: 2px solid rgb(255, 255, 255);
+}
+
+.created_games_list td:last-child button{
+  border-radius: 5px;
+  outline: none;
+  background-color: rgb(65, 161, 65);
+  color: white;
+  cursor: pointer;
+}
+
+.created_games_list{
+  overflow-y: scroll;
+}
+
+/* Create game block styles */
+.create_game_block{
+  width: 350px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: 20px 0px;
+  border-top: 2px solid rgb(206, 206, 206);
+  border-bottom: 2px solid rgb(206, 206, 206);
+  padding: 10px 0px;
+}
+
+.form_conteiner{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin: 5px 0px;
+}
+
+.form_conteiner label{
+  width: 90px;
+}
+
+.label_container{
+  width: 90px;
+}
+
+.feedback_blc{
+  font-size: 12px;
+  color: #e93648;
+  margin-top: 2px;
+}
+
+.game_name, .game_color, .game_password{
+  height: 25px;
+  width: 225px;
+  font-size: 16px;
+  border-radius: 5px;
+  padding: 0px 10px;
+  border: 1px solid rgb(206, 206, 206);
+  margin: 0;
+}
+
+.create_newgame{
+  width: 200px;
+  height: 35px;
+  border-radius: 10px;
+  box-shadow: none;
+  outline: none;
+  background-color: rgb(65, 161, 65);
+  color: white;
+  border: none;
+  margin: 10px 0px 10px 0px;
+  box-shadow: 2px 2px 2px rgb(50, 119, 50);
+  cursor: pointer;
+}
+
+.create_newgame:active{
+  box-shadow: -2px -2px 2px rgb(50, 119, 50);
+}
+
+.no_valid_input{
+  border: 1px solid #e93648;
+}

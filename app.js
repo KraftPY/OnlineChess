@@ -31,6 +31,8 @@ app.get('/', (req, res) => {
 app.post('/registration', routes.registration);
 app.post('/login', routes.login);
 app.get('/setting', routes.setting);
-app.post('/change-setting', routes.changeSetting)
+app.post('/change-setting', routes.changeSetting);
+app.post('/create-game', routes.createGame);
+app.get('/list-games', routes.listGames);
 
 module.exports = app;
