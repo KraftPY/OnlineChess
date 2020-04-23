@@ -1,16 +1,16 @@
-// подкл. веб-фреймворк Express и настраиваем его
-const app = require('./app');
+// подкл. веб-фреймворк Express
+const { server } = require('./app');
 
 // подкл. config с нужными настройками для дальнейшей работы
-const config = require('./config');
+const config = require('./server/config');
 
-// подкл. socket.io
-const server = require('http').Server(app);
+
+// подкл. Socket.io и callback обработчик событий 
 const io = require('socket.io')(server);
+const socketIO = require('./server/socket');
 
 // подкл. monegoose для работы с БД MongoDB
-const database = require('./database');
-
+const database = require('./server/database');
 
 // пробуем подлючиться к нашей БД
 database()
@@ -23,14 +23,11 @@ database()
 		server.listen(config.PORT, () => {
 			console.log(`Example app listening on port ${config.PORT}!`);
 		});
+
+		// запускаем socket.io подключение
+		io.on('connection', socketIO);
 	})
 	.catch(() => {
 		console.log('No database connection!');
 	});
 
-io.on('connection', function (socket) {
-	socket.emit('news', { hello: 'world' });
-	socket.on('my other event', function (data) {
-		console.log(data);
-	});
-});

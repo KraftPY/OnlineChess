@@ -3,7 +3,7 @@ const router = express.Router();
 const bcrypt = require('bcrypt');
 const User = require('../models/user');
 const jwt = require('jsonwebtoken');
-const config = require('../config');
+const config = require('../server/config');
 
 router.post('/login', async (req, res) => {
   const { login, password } = req.body;
@@ -19,8 +19,7 @@ router.post('/login', async (req, res) => {
   const user = await User.findOne({ login: login });
 
   if (user && bcrypt.compareSync(password, user.password)) {
-    console.log(user._id);
-    const token = jwt.sign({ id: user._id }, config.JWT_SECRED, { expiresIn: '1m' });
+    const token = jwt.sign({ id: user._id, login }, config.JWT_SECRED, { expiresIn: '1m' });
     return res.json({
       status: true,
       token: token,

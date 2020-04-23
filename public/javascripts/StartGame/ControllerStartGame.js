@@ -15,8 +15,9 @@ export class ControllerStartGame {
 	}
 
 	async handlerNewGameBtn() {
-		const res = await this.model.getCreatedGamesFromSrv();
-		this.view.openNewGameModal(res);
+		const createdGamesList = await this.model.getCreatedGamesFromSrv();
+		this.view.openNewGameModal();
+		this.view.renderTableData(createdGamesList);
 	}
 
 	handlerLoadGameBtn() {
@@ -42,11 +43,9 @@ export class ControllerStartGame {
 			}
 			case 'create_newgame': {
 				const game = this.view.getCreateGameData();
+				this.view.showHideNoCreateGame(false);
 				if (this.validationNameGame(game.name)) {
-					this.view.clearCreateGameData();
-					this.model.createNewGame(game);
-					this.view.closeModalWnd();
-					this.handlerNewGameBtn();
+					this.tryCreateGame(game);
 				} else {
 					this.view.showNoValidGameName();
 				}
@@ -80,6 +79,20 @@ export class ControllerStartGame {
 			return false;
 		} else {
 			return true;
+		}
+	}
+
+	async tryCreateGame(game) {
+		const res = await this.model.createNewGame(game);
+		if (res.status) {
+			this.view.clearCreateGameData();
+			const createdGamesList = await this.model.getCreatedGamesFromSrv();
+			this.view.renderTableData(createdGamesList);
+		} else if (res.msg == 'JsonWebTokenError' || res.msg == 'TokenExpiredError') {
+			this.view.closeModalWnd();
+			this.publisher.publish('no_auth');
+		} else {
+			this.view.showHideNoCreateGame(res.msg);
 		}
 	}
 }

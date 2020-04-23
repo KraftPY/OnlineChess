@@ -1,6 +1,7 @@
 const express = require('express');
 const favicon = require('serve-favicon');
 const app = express();
+const server = require('http').Server(app);
 // модуль для обработки POST запроса
 const bodyParser = require('body-parser');
 // модуль для работы с путями к статик. файлами
@@ -35,4 +36,7 @@ app.post('/change-setting', routes.changeSetting);
 app.post('/create-game', routes.createGame);
 app.get('/list-games', routes.listGames);
 
-module.exports = app;
+module.exports = {
+	app,
+	server
+};

@@ -173,7 +173,7 @@
   width: 90px;
 }
 
-.feedback_blc{
+.feedback_blc, .feedback_create{
   font-size: 12px;
   color: #e93648;
   margin-top: 2px;

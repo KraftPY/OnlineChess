@@ -12,6 +12,7 @@ export class AuthorizationController {
 		});
 		this.model = new AuthorizationModel();
 		this.publisher = publisher;
+		this.publisher.subscribe('no_auth', this.handlerNoAuthGlobalEvent.bind(this));
 	}
 
 	// ToDo list:
@@ -272,10 +273,13 @@ export class AuthorizationController {
 		this.view.closeModal();
 	}
 
-
 	logOut() {
 		this.view.renderNoAuthMenu();
 		this.view.closeSubmenu();
 		this.model.clearAuth();
+	}
+
+	handlerNoAuthGlobalEvent() {
+		this.view.renderLogInModal(this.handlerAuthorization.bind(this), this.handlerCloseModal.bind(this));
 	}
 }

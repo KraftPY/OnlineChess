@@ -33,6 +33,7 @@ export class TemplateStartGame {
 						<input type="password" class="game_password" id="game_password" name="password" />
 					</div>
 					<button class="create_newgame">Create new game</button>
+					<div class="feedback_create none"></div>
 				</div>
 				<div class="table_container">
 					<table class="created_games_list">

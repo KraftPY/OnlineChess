@@ -9,17 +9,15 @@ export class ModelStartGame {
 	}
 
 	createNewGame(game) {
-		const user = JSON.parse(localStorage.getItem('user'));
-		game.user = user.login;
-		fetch('/create-game', {
+		const token = localStorage.getItem('token');
+		return fetch('/create-game', {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',
-				'Authorization': this.token,
+				'Authorization': token,
 			},
 			body: JSON.stringify(game),
 		})
-			.then(res => res.json())
-			.then(res => console.log(res));
+			.then(res => res.json());
 	}
 }

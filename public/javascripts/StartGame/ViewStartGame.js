@@ -24,7 +24,7 @@ export class ViewStartGame {
 		this.dom.mainModal.addEventListener('mousedown', handlerMainModal);
 	}
 
-	openNewGameModal(res) {
+	openNewGameModal() {
 		const { handlerNewGameModal } = this.allHandlers;
 		this.dom.mainModal.innerHTML = '';
 
@@ -35,13 +35,6 @@ export class ViewStartGame {
 		this.dom.mainModal.append(this.dom.newGameModal);
 		document.body.append(this.dom.mainModal);
 
-		const tBody = document.querySelector('.created_games_list tbody');
-		tBody.innerHTML = '';
-		if (res.status && res.data.length) {
-			res.data.forEach((game, i) => tBody.innerHTML += TemplateStartGame.getTableCol(game, i));
-		} else {
-			tBody.innerHTML = TemplateStartGame.getEmptyTable();
-		}
 		this.newGame = {
 			container: document.querySelector('.blc_content'),
 			withOpponent: document.querySelector('.with_opponent'),
@@ -49,8 +42,18 @@ export class ViewStartGame {
 		};
 		this.newGame.practice.remove();
 
-		// add general eventlistener
+		// add general eventListener
 		this.dom.newGameModal.addEventListener('click', handlerNewGameModal);
+	}
+
+	renderTableData(res) {  // render created game list
+		const tBody = document.querySelector('.created_games_list tbody');
+		tBody.innerHTML = '';
+		if (res.status && res.data.length) {
+			res.data.forEach((game, i) => tBody.innerHTML += TemplateStartGame.getTableCol(game, i));
+		} else {
+			tBody.innerHTML = TemplateStartGame.getEmptyTable();
+		}
 	}
 
 	showNewGameWithOp() {
@@ -97,7 +100,14 @@ export class ViewStartGame {
 		inputName.nextElementSibling.classList.remove('none');
 	}
 
-
-
-
+	showHideNoCreateGame(msg = false) {
+		const fb = document.querySelector('.feedback_create');
+		if (!msg) {
+			fb.innerHTML = '';
+			fb.classList.toggle('none', true);
+		} else {
+			fb.innerHTML = msg;
+			fb.classList.remove('none');
+		}
+	}
 }
