@@ -1,27 +1,37 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const bcrypt = require('bcrypt');
-const middleAuth = require('../middleware/auth');
-const Game = require('../models/game');
+const bcrypt = require("bcrypt");
+const middleAuth = require("../middleware/auth");
+const Game = require("../models/game");
 
-router.post('/create-game', middleAuth, (req, res) => {
+router.post("/create-game", middleAuth, (req, res) => {
   const { name, color, password } = req.body;
   const user = req.userData.login;
   const patternNoHTML = /<|>/g;
 
-  if (!name || name.length < 3 || name.length > 16 || patternNoHTML.test(name)) {
-    res.json({ status: false, msg: 'Name must be between 3 and 16 characters!' });
+  if (
+    !name ||
+    name.length < 3 ||
+    name.length > 16 ||
+    patternNoHTML.test(name)
+  ) {
+    res.json({
+      status: false,
+      msg: "Name must be between 3 and 16 characters!"
+    });
   } else {
     Game.create({
-      name: name.replace(/\s+/g, ' ').trim(),
+      name: name.replace(/\s+/g, " ").trim(),
       user,
       userColor: color,
-      opponent: '',
-      opColor: '',
+      opponent: "",
+      opColor: "",
       password: bcrypt.hashSync(password, bcrypt.genSaltSync(10)),
-      gameHistory: ''
+      gameHistory: ""
     })
-      .then((data) => res.json({ status: true, msg: 'Create successful!', gameId: data._id }))
+      .then(data =>
+        res.json({ status: true, msg: "Create successful!", gameId: data._id })
+      )
       .catch(err => {
         if (err.code == 11000) {
           const msg = `Game with that name has already been created!`;

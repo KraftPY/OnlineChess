@@ -1,4 +1,4 @@
-const { Schema, model } = require('mongoose');
+const { Schema, model } = require("mongoose");
 
 // создаем описание одной сущности Game, которые будут храниться в коллекции БД
 const schema = new Schema({
@@ -9,16 +9,16 @@ const schema = new Schema({
   },
   user: {
     type: String,
-    required: true,
+    required: true
   },
-  color: {
+  userColor: {
     type: String,
-    required: true,
+    required: true
   },
   password: {
     type: String,
     required: true
-  },
+  }
 });
 
-module.exports = model('Game', schema);
+module.exports = model("Game", schema);
