@@ -61,7 +61,7 @@ export class TemplateStartGame {
 		<td>${game.name}</td>
 		<td>${game.user} (${game.color})</td>
 		<td>
-			<button class="btn_join_game" data-game="${game.name}">Join</button>
+			<button class="btn_join_game" data-game="${game.id}">Join</button>
 		</td>
 	</tr>`;
 	}

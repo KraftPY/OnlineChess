@@ -2,7 +2,7 @@ import { ViewStartGame } from './ViewStartGame.js';
 import { ModelStartGame } from './ModelStartGame.js';
 
 export class ControllerStartGame {
-	constructor(publisher) {
+	constructor(publisher, onlineGame) {
 		this.allHandlers = {
 			handlerNewGameBtn: this.handlerNewGameBtn.bind(this),
 			handlerLoadGameBtn: this.handlerLoadGameBtn.bind(this),
@@ -12,6 +12,7 @@ export class ControllerStartGame {
 		this.model = new ModelStartGame();
 		this.view = new ViewStartGame(this.allHandlers);
 		this.publisher = publisher;
+		this.onlineGame = onlineGame;
 	}
 
 	async handlerNewGameBtn() {
@@ -57,7 +58,9 @@ export class ControllerStartGame {
 				break;
 			}
 			case 'btn_join_game': {
-				console.log(ev.target.dataset.game);
+				// socket.io
+				this.onlineGame.joinGame(ev.target.dataset.game);
+				// -------------------------------------------
 				break;
 			}
 			default:
@@ -85,6 +88,11 @@ export class ControllerStartGame {
 	async tryCreateGame(game) {
 		const res = await this.model.createNewGame(game);
 		if (res.status) {
+
+			// socket.io
+			this.onlineGame.createGame(res.gameId);
+			// -------------------------------------------
+
 			this.view.clearCreateGameData();
 			const createdGamesList = await this.model.getCreatedGamesFromSrv();
 			this.view.renderTableData(createdGamesList);

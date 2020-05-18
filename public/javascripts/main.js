@@ -3,18 +3,13 @@ import { ControllerChessBoard } from './ChessBoard/ControllerChessBoard.js';
 import { ControllerHistoryOfMoves } from './HistoryOfMoves/ControllerHistoryOfMoves.js';
 import { ControllerStartGame } from './startGame/ControllerStartGame.js';
 import { AuthorizationController } from './Authorization/AuthorizationController.js';
+import { OnlineGame } from './OnlineGame/OnlineGame.js';
 
 // ---------------------Start-------------------------------
 
+const onlineGame = new OnlineGame();
 const publisher = new PubSub();
-const newGame = new ControllerStartGame(publisher);
+const startGame = new ControllerStartGame(publisher, onlineGame);
 const authorization = new AuthorizationController(publisher);
 const chessBoard = new ControllerChessBoard(publisher);
 const historyOfMoves = new ControllerHistoryOfMoves(publisher);
-
-const socket = io.connect();
-
-socket.on('news', function (data) {
-  console.log(data);
-  socket.emit('my other event', { my: 'data' });
-});

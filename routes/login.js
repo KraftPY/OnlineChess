@@ -19,7 +19,7 @@ router.post('/login', async (req, res) => {
   const user = await User.findOne({ login: login });
 
   if (user && bcrypt.compareSync(password, user.password)) {
-    const token = jwt.sign({ id: user._id, login }, config.JWT_SECRED, { expiresIn: '1m' });
+    const token = jwt.sign({ id: user._id, login }, config.JWT_SECRED, { expiresIn: '1h' });
     return res.json({
       status: true,
       token: token,
