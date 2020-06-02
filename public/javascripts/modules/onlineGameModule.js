@@ -6,8 +6,8 @@ export class onlineGameModule {
   }
 
   init() {
-    this.socket.on("news", data => {
-      console.log(data);
+    this.socket.on("connection", data => {
+      console.log(data.msg);
     });
 
     this.socket.on("opponent ended move", game => {
@@ -17,12 +17,17 @@ export class onlineGameModule {
     });
   }
 
+  set setHandlerStartMove(handler) {
+    this.handlerStartMove = handler;
+  }
+
   createGame(gameId) {
     this.socket.emit("create new game", gameId);
   }
 
-  joinGame(gameId) {
+  joinGame(gameId, handlerStartGame) {
     this.socket.emit("connect to the game", gameId);
+    this.socket.on("start game", handlerStartGame);
   }
 
   sendMove(game) {

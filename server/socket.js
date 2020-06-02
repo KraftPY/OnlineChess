@@ -1,7 +1,7 @@
 const arrGameId = [];
 
 module.exports = socket => {
-  socket.emit("news", { data: "Hi" });
+  socket.emit("connection", { msg: "Сonnected to the server!" });
 
   socket.on("create new game", id => {
     arrGameId.push(id);
@@ -13,10 +13,15 @@ module.exports = socket => {
 
   socket.on("connect to the game", id => {
     // console.log(socket.adapter.rooms[id]);
-    socket.join(id, () => {
-      let rooms = Object.keys(socket.rooms);
-      console.log(rooms);
-    });
+    // socket.join(id, () => {
+    //   let rooms = Object.keys(socket.rooms);
+    //   console.log(rooms);
+    // });
+    const opponent = {
+      name: "Pavel",
+      color: "white"
+    };
+    socket.emit("start game", opponent);
   });
 
   socket.on("send move", game => {

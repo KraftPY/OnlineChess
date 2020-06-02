@@ -3,7 +3,7 @@ import { ControllerChessBoard } from "./ChessBoard/ControllerChessBoard.js";
 import { ControllerHistoryOfMoves } from "./HistoryOfMoves/ControllerHistoryOfMoves.js";
 import { ControllerStartGame } from "./startGame/ControllerStartGame.js";
 import { AuthorizationController } from "./Authorization/AuthorizationController.js";
-import { onlineGameModule } from "./OnlineGame/onlineGameModule.js";
+import { onlineGameModule } from "./modules/onlineGameModule.js";
 
 // ---------------------Start-------------------------------
 

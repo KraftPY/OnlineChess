@@ -7,14 +7,18 @@ export class ViewHistoryOfMoves {
 		this.stepBackInHistoryMoves = stepBackInHistoryMoves;
 	}
 
-	addNewMoveToList({ firstPiece, secondPiece, previousPos }) {
+	addNewMoveToList({ firstPiece, secondPiece, previousPos }, isOnlineGame) {
 		const listElement = document.createElement('li');
 		const symbol = 'abcdefgh'.split(''),
 			number = '87654321'.split('');
 
 		let fPieceName = firstPiece.pieceName[0].toUpperCase() + firstPiece.pieceName.slice(1);
 
-		listElement.addEventListener('click', this.stepBackInHistoryMoves);
+		if (!isOnlineGame) {
+			listElement.addEventListener('click', this.stepBackInHistoryMoves);
+			listElement.style.cursor = "pointer";
+		}
+
 		if (firstPiece.isPromotion) {
 			listElement.innerHTML = `Pawn (${firstPiece.color}) promoted to a ${fPieceName}`;
 		} else {

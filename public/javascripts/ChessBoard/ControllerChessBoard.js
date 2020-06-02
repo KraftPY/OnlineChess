@@ -107,6 +107,9 @@ export class ControllerChessBoard {
       value: ev.target.dataset.id
     });
 
+    console.log(this.model.whoseMove);
+    console.log(this.model.whoseMoveNow);
+
     if (
       this.tempPieces.first &&
       this.model.whoseMoveNow != chessPiece.color &&
@@ -412,9 +415,8 @@ export class ControllerChessBoard {
     // передаем ход другому игроку
     if (this.model.isOnlineGame) {
       this.endMoveOnline();
-    } else {
-      this.model.changeWhoseMove();
     }
+    this.model.changeWhoseMove();
 
     // обнуляем выбраного хода в истории
     this.model.changeNumMove = null;
@@ -449,11 +451,23 @@ export class ControllerChessBoard {
 
   joinOnlineGame(gameId) {
     // socket.io
-    this.onlineGameModule.joinGame(gameId);
-    this.onlineGameModule.handlerStartMove = this.startMoveOnline.bind(this);
-    console.log("Start game -->", gameId);
+    this.onlineGameModule.joinGame(gameId, this.startOnlineGame.bind(this));
+    this.onlineGameModule.setHandlerStartMove = this.startMoveOnline.bind(this);
+    console.log(`Сonnected to the game ${gameId}`);
+    console.log("----------------------------------------");
+    console.log("Waiting for the opponent...");
+  }
+
+  startOnlineGame(opponent) {
+    console.log(opponent);
+
     this.newGame();
     this.model.changeIsOnlineGame = true;
+    if (opponent.color === "white") {
+      this.model.changeWhoseMove();
+      this.view.removeAllListeners(this.model.arrChessPieces);
+      console.log("Opponent's move...");
+    }
   }
 
   endMoveOnline() {
@@ -462,8 +476,6 @@ export class ControllerChessBoard {
   }
 
   startMoveOnline(game) {
-    console.log("Yes");
-
     this.view.removeAllPieces(this.model.arrChessPieces);
     const arrLoadPiece = this.view.renderSaveGame(game);
     this.model.createNewChessPiece(arrLoadPiece);

@@ -260,11 +260,11 @@ export class ViewChessBoard {
     });
     notChoosed
       ? arrDomNodesChessPiece.forEach(piece =>
-          piece.classList.remove("figure_kill")
-        )
+        piece.classList.remove("figure_kill")
+      )
       : arrDomNodesChessPiece.forEach(piece =>
-          piece.classList.remove("choosed", "figure_kill")
-        );
+        piece.classList.remove("choosed", "figure_kill")
+      );
   }
 
   selectChessPiece(piece) {
@@ -285,5 +285,10 @@ export class ViewChessBoard {
 
   addCssClass(element, className) {
     element.classList.add(className);
+  }
+
+  removeAllListeners(arrChessPieces) {
+    arrChessPieces.forEach(el => el.div.removeEventListener("click", this.clickChessPiece));
+    this.dom.chessBoard.removeEventListener("click", this.clickEmptyCell);
   }
 }
