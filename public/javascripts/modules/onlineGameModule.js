@@ -17,17 +17,16 @@ export class onlineGameModule {
     });
   }
 
-  set setHandlerStartMove(handler) {
-    this.handlerStartMove = handler;
-  }
-
-  createGame(gameId) {
+  createGame(gameId, { startGame, startMove }) {
+    this.handlerStartMove = startMove;
     this.socket.emit("create new game", gameId);
+    this.socket.on("start game", startGame);
   }
 
-  joinGame(gameId, handlerStartGame) {
+  joinGame(gameId, { startGame, startMove }) {
+    this.handlerStartMove = startMove;
     this.socket.emit("connect to the game", gameId);
-    this.socket.on("start game", handlerStartGame);
+    this.socket.on("start game", startGame);
   }
 
   sendMove(game) {

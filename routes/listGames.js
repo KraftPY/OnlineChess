@@ -12,7 +12,6 @@ router.get("/list-games", async (req, res) => {
         userColor: game.userColor
       };
     });
-    console.log(data);
 
     res.json({ status: true, data });
   });

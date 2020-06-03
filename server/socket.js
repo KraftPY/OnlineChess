@@ -11,7 +11,7 @@ module.exports = socket => {
     });
   });
 
-  socket.on("connect to the game", id => {
+  socket.on("connect to the game", game => {
     // console.log(socket.adapter.rooms[id]);
     // socket.join(id, () => {
     //   let rooms = Object.keys(socket.rooms);
@@ -19,7 +19,7 @@ module.exports = socket => {
     // });
     const opponent = {
       name: "Pavel",
-      color: "white"
+      color: "black"
     };
     socket.emit("start game", opponent);
   });

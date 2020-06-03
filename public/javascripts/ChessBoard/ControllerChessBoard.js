@@ -15,6 +15,7 @@ export class ControllerChessBoard {
     this.publisher.subscribe("moveBack", this.moveBackToHistory.bind(this));
     this.publisher.subscribe("startPracticeGame", this.newGame.bind(this));
     this.publisher.subscribe("startLoadGame", this.loadGame.bind(this));
+    this.publisher.subscribe("createOnlineGame", this.createOnlineGame.bind(this));
     this.publisher.subscribe("joinOnlineGame", this.joinOnlineGame.bind(this));
 
     this.tempPieces = { first: null, second: null };
@@ -106,9 +107,6 @@ export class ControllerChessBoard {
       name: "id",
       value: ev.target.dataset.id
     });
-
-    console.log(this.model.whoseMove);
-    console.log(this.model.whoseMoveNow);
 
     if (
       this.tempPieces.first &&
@@ -446,13 +444,23 @@ export class ControllerChessBoard {
 
   // Online game block
   createOnlineGame(gameId) {
-    console.log(gameId);
+    const handlers = {
+      startGame: this.startOnlineGame.bind(this),
+      startMove: this.startMoveOnline.bind(this)
+    };
+    this.onlineGameModule.createGame(gameId, handlers);
+    console.log(`Game created id: ${gameId}`);
+    console.log("----------------------------------------");
+    console.log("Waiting for the opponent...");
   }
 
   joinOnlineGame(gameId) {
     // socket.io
-    this.onlineGameModule.joinGame(gameId, this.startOnlineGame.bind(this));
-    this.onlineGameModule.setHandlerStartMove = this.startMoveOnline.bind(this);
+    const handlers = {
+      startGame: this.startOnlineGame.bind(this),
+      startMove: this.startMoveOnline.bind(this)
+    };
+    this.onlineGameModule.joinGame(gameId, handlers);
     console.log(`Сonnected to the game ${gameId}`);
     console.log("----------------------------------------");
     console.log("Waiting for the opponent...");

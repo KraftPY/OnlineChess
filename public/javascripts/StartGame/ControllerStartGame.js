@@ -57,8 +57,7 @@ export class ControllerStartGame {
         break;
       }
       case "btn_join_game": {
-        this.publisher.publish("joinOnlineGame", ev.target.dataset.game);
-        this.view.closeModalWnd();
+        this.tryJoinGame(ev.target.dataset.game);
         // -------------------------------------------
         break;
       }
@@ -87,13 +86,27 @@ export class ControllerStartGame {
   async tryCreateGame(game) {
     const res = await this.model.createNewGame(game);
     if (res.status) {
-      // socket.io
-      this.onlineGame.createGame(res.gameId);
-      // -------------------------------------------
 
+      this.publisher.publish("createOnlineGame", res.gameId);
       this.view.clearCreateGameData();
       const createdGamesList = await this.model.getCreatedGamesFromSrv();
       this.view.renderTableData(createdGamesList);
+    } else if (
+      res.msg == "JsonWebTokenError" ||
+      res.msg == "TokenExpiredError"
+    ) {
+      this.view.closeModalWnd();
+      this.publisher.publish("no_auth");
+    } else {
+      this.view.showHideNoCreateGame(res.msg);
+    }
+  }
+
+  async tryJoinGame(game) {
+    const res = await this.model.joinGame();
+    if (res.status) {
+      this.publisher.publish("joinOnlineGame", game);
+      this.view.closeModalWnd();
     } else if (
       res.msg == "JsonWebTokenError" ||
       res.msg == "TokenExpiredError"

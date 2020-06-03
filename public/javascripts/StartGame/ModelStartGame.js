@@ -20,4 +20,16 @@ export class ModelStartGame {
 		})
 			.then(res => res.json());
 	}
+
+	joinGame() {
+		const token = localStorage.getItem('token');
+		return fetch('/join-game', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+				'Authorization': token,
+			}
+		})
+			.then(res => res.json());
+	}
 }
