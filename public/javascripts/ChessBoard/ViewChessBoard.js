@@ -3,9 +3,11 @@ import { TemplateChessBoard } from "./TemplateChessBoard.js";
 export class ViewChessBoard {
   constructor(clickChessPiece, clickEmptyCell) {
     this.dom = {
+      wrapper: document.querySelector(".wrapper"),
       chessBoard: document.querySelector(".chessBoard"),
       blackOut: document.querySelector(".black_out"),
-      whiteOut: document.querySelector(".white_out")
+      whiteOut: document.querySelector(".white_out"),
+      opMove: null
     };
     this.clickChessPiece = clickChessPiece;
     this.clickEmptyCell = clickEmptyCell;
@@ -290,5 +292,29 @@ export class ViewChessBoard {
   removeAllListeners(arrChessPieces) {
     arrChessPieces.forEach(el => el.div.removeEventListener("click", this.clickChessPiece));
     this.dom.chessBoard.removeEventListener("click", this.clickEmptyCell);
+  }
+
+  addAllListeners(arrChessPieces) {
+    arrChessPieces.forEach(el => el.div.addEventListener("click", this.clickChessPiece));
+    this.dom.chessBoard.addEventListener("click", this.clickEmptyCell);
+  }
+
+  renderOpMove(isRender) {
+    if (!this.dom.opMove) {
+      const opMove = document.createElement('div');
+      opMove.classList.add("opMove");
+      opMove.innerHTML = "Now the opponent’s move";
+      this.dom.opMove = opMove;
+    }
+
+    if (isRender) {
+      const top = this.dom.chessBoard.offsetTop + this.dom.chessBoard.offsetHeight / 2 - 20;
+      const left = this.dom.chessBoard.offsetLeft + this.dom.chessBoard.offsetWidth / 2 - 125;
+      this.dom.opMove.style.left = `${left}px`;
+      this.dom.opMove.style.top = `${top}px`;
+      this.dom.wrapper.append(this.dom.opMove);
+    } else {
+      this.dom.opMove.remove();
+    }
   }
 }

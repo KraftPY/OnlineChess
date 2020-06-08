@@ -103,4 +103,42 @@ export class ModelChessBoard {
   set changeIsOnlineGame(value) {
     this.isOnlineGame = value;
   }
+
+  getUserLogin() {
+    const user = JSON.parse(localStorage.getItem("user"));
+    return user.login;
+  }
+
+  saveGameId(id) {
+    const onlineGame = {
+      gameId: id
+    };
+    localStorage.setItem("onlineGame", JSON.stringify(onlineGame));
+  }
+
+  getGameId() {
+    const onlineGame = JSON.parse(localStorage.getItem("onlineGame"));
+    return onlineGame.gameId;
+  }
+
+  changeSaveGame(save) {
+    let arrHistoryMove = JSON.parse(localStorage.getItem("saveGame"));
+    arrHistoryMove.push(JSON.stringify(save));
+    localStorage.setItem("saveGame", JSON.stringify(arrHistoryMove));
+  }
+
+  saveOpponent(op) {
+    const onlineGame = JSON.parse(localStorage.getItem("onlineGame"));
+    onlineGame.opponent = op.name;
+    onlineGame.opColor = op.color;
+    localStorage.setItem("onlineGame", JSON.stringify(onlineGame));
+  }
+
+  getSaveOnlineGame() {
+    return JSON.parse(localStorage.getItem("onlineGame"));
+  }
+
+  notOnlineGame() {
+    localStorage.setItem("onlineGame", null);
+  }
 }

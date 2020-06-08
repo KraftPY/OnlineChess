@@ -10,6 +10,7 @@ export class ControllerHistoryOfMoves {
     this.publisher.subscribe("loadGame", this.loadGame.bind(this));
     this.publisher.subscribe("startPracticeGame", this.newPracticeGame.bind(this));
     this.publisher.subscribe("joinOnlineGame", this.newOnlineGame.bind(this));
+    this.publisher.subscribe("createOnlineGame", this.newOnlineGame.bind(this));
   }
 
   newPracticeGame() {
@@ -18,7 +19,6 @@ export class ControllerHistoryOfMoves {
 
   newOnlineGame() {
     this.view.clearListMoves();
-    this.model.setIsOnlineGame = true;
   }
 
   addNewMove() {
@@ -27,7 +27,8 @@ export class ControllerHistoryOfMoves {
       this.model.deleteChoosedMovesFromLS(num);
     }
     const move = this.model.getMoveFromLocalStorage();
-    this.view.addNewMoveToList(move, this.model.isOnlineGame);
+    const isOnlineGame = this.model.isOnlineGame();
+    this.view.addNewMoveToList(move, isOnlineGame);
   }
 
   stepBackInHistoryMoves(ev) {
@@ -36,11 +37,13 @@ export class ControllerHistoryOfMoves {
     this.publisher.publish("moveBack", num);
   }
 
-  loadGame() {
+  loadGame(online = false) {
+    this.model.setIsOnlineGame = false;
     this.view.clearListMoves();
     const allHistoryMoves = this.model.getAllMoveFromLS();
+    const isOnlineGame = this.model.isOnlineGame();
     allHistoryMoves.forEach(el => {
-      this.view.addNewMoveToList(el);
+      this.view.addNewMoveToList(el, isOnlineGame);
     });
   }
 }

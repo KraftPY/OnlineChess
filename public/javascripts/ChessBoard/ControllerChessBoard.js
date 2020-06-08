@@ -15,13 +15,18 @@ export class ControllerChessBoard {
     this.publisher.subscribe("moveBack", this.moveBackToHistory.bind(this));
     this.publisher.subscribe("startPracticeGame", this.newGame.bind(this));
     this.publisher.subscribe("startLoadGame", this.loadGame.bind(this));
+
     this.publisher.subscribe("createOnlineGame", this.createOnlineGame.bind(this));
     this.publisher.subscribe("joinOnlineGame", this.joinOnlineGame.bind(this));
+    this.publisher.subscribe("reconnectOnlineGame", this.reconnectOnlineGame.bind(this));
 
     this.tempPieces = { first: null, second: null };
   }
 
   newGame() {
+    this.model.changeIsOnlineGame = false;
+    this.model.notOnlineGame();
+    this.view.renderOpMove(false);
     this.view.removeAllPieces(this.model.arrChessPieces);
     let arrNewPiece = this.view.renderNewGame();
     this.model.createNewChessPiece(arrNewPiece, true);
@@ -413,8 +418,9 @@ export class ControllerChessBoard {
     // передаем ход другому игроку
     if (this.model.isOnlineGame) {
       this.endMoveOnline();
+    } else {
+      this.model.changeWhoseMove();
     }
-    this.model.changeWhoseMove();
 
     // обнуляем выбраного хода в истории
     this.model.changeNumMove = null;
@@ -436,6 +442,11 @@ export class ControllerChessBoard {
           chessPiece.pos
         );
 
+        // передаем ход другому игроку
+        if (this.model.isOnlineGame) {
+          this.endMoveOnline();
+        }
+
         // Оповещаем что ход сделан
         this.publisher.publish("moveEnd");
       });
@@ -444,6 +455,7 @@ export class ControllerChessBoard {
 
   // Online game block
   createOnlineGame(gameId) {
+    this.model.saveGameId(gameId);
     const handlers = {
       startGame: this.startOnlineGame.bind(this),
       startMove: this.startMoveOnline.bind(this)
@@ -455,39 +467,73 @@ export class ControllerChessBoard {
   }
 
   joinOnlineGame(gameId) {
-    // socket.io
+    this.model.saveGameId(gameId);
     const handlers = {
       startGame: this.startOnlineGame.bind(this),
       startMove: this.startMoveOnline.bind(this)
     };
-    this.onlineGameModule.joinGame(gameId, handlers);
+    const login = this.model.getUserLogin();
+    this.onlineGameModule.joinGame(gameId, login, handlers);
     console.log(`Сonnected to the game ${gameId}`);
-    console.log("----------------------------------------");
-    console.log("Waiting for the opponent...");
+  }
+
+  newOnlineGame() {
+    this.model.changeIsOnlineGame = true;
+    this.view.removeAllPieces(this.model.arrChessPieces);
+    let arrNewPiece = this.view.renderNewGame();
+    this.model.createNewChessPiece(arrNewPiece, true);
+    this.model.whoseMoveNow != "white" ? this.model.changeWhoseMove() : false;
   }
 
   startOnlineGame(opponent) {
-    console.log(opponent);
+    this.model.saveOpponent(opponent);
 
-    this.newGame();
-    this.model.changeIsOnlineGame = true;
+    this.newOnlineGame();
     if (opponent.color === "white") {
       this.model.changeWhoseMove();
       this.view.removeAllListeners(this.model.arrChessPieces);
-      console.log("Opponent's move...");
+      this.view.renderOpMove(true);
     }
   }
 
   endMoveOnline() {
     const saveGame = this.model.getSaveGame();
-    this.onlineGameModule.sendMove(saveGame);
+    const id = this.model.getGameId();
+    this.onlineGameModule.sendMove(id, saveGame);
+    this.view.removeAllListeners(this.model.arrChessPieces);
+    this.view.renderOpMove(true);
   }
 
   startMoveOnline(game) {
+    this.model.changeSaveGame(game);
     this.view.removeAllPieces(this.model.arrChessPieces);
     const arrLoadPiece = this.view.renderSaveGame(game);
     this.model.createNewChessPiece(arrLoadPiece);
     this.publisher.publish("loadGame");
+    this.view.renderOpMove(false);
+  }
+
+  reconnectOnlineGame() {
+    const saveGame = this.model.getSaveGame();
+    this.model.changeIsOnlineGame = true;
+    this.view.removeAllPieces(this.model.arrChessPieces);
+    const arrLoadPiece = this.view.renderSaveGame(saveGame);
+    this.model.createNewChessPiece(arrLoadPiece);
+    this.publisher.publish("loadGame");
+
+    const onlineGame = this.model.getSaveOnlineGame();
+    const prevColorMove = saveGame.tempPieces.first.color;
+    if (onlineGame.opColor !== prevColorMove) {
+      this.view.removeAllListeners(this.model.arrChessPieces);
+      this.view.renderOpMove(true);
+    }
+    this.model.whoseMoveNow === onlineGame.opColor ? this.model.changeWhoseMove() : false;
+
+
+    const login = this.model.getUserLogin();
+    const startMove = this.startMoveOnline.bind(this);
+    this.onlineGameModule.reconnect(onlineGame.gameId, login, startMove);
+    console.log(`Reconnected to the game ${onlineGame.gameId}`);
   }
 
   // End Online game block

@@ -1,7 +1,5 @@
 export class ModelHistoryOfMoves {
-	constructor() {
-		this.isOnlineGame = false;
-	}
+	constructor() { }
 
 	getMoveFromLocalStorage() {
 		const saveGame = JSON.parse(localStorage.getItem('saveGame')),
@@ -32,7 +30,7 @@ export class ModelHistoryOfMoves {
 		localStorage.setItem('saveGame', JSON.stringify(saveGame));
 	}
 
-	set setIsOnlineGame(value) {
-		this.isOnlineGame = true;
+	isOnlineGame() {
+		return JSON.parse(localStorage.getItem("onlineGame"));
 	}
 }

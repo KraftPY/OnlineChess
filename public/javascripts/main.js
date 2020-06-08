@@ -7,8 +7,8 @@ import { onlineGameModule } from "./modules/onlineGameModule.js";
 
 // ---------------------Start-------------------------------
 
-const onlineGame = new onlineGameModule();
 const publisher = new PubSub();
+const onlineGame = new onlineGameModule(publisher);
 const startGame = new ControllerStartGame(publisher);
 const authorization = new AuthorizationController(publisher);
 const chessBoard = new ControllerChessBoard(publisher, onlineGame);

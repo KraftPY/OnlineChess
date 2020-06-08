@@ -24,10 +24,7 @@ router.post("/create-game", middleAuth, (req, res) => {
       name: name.replace(/\s+/g, " ").trim(),
       user,
       userColor: color,
-      opponent: "",
-      opColor: "",
       password: bcrypt.hashSync(password, bcrypt.genSaltSync(10)),
-      gameHistory: ""
     })
       .then(data =>
         res.json({ status: true, msg: "Create successful!", gameId: data._id })

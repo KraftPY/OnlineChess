@@ -18,7 +18,10 @@ const schema = new Schema({
   password: {
     type: String,
     required: true
-  }
+  },
+  opponent: { type: String },
+  opColor: { type: String },
+  gameHistory: { type: Object },
 });
 
 module.exports = model("Game", schema);
