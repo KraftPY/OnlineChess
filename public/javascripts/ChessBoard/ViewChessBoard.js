@@ -7,7 +7,8 @@ export class ViewChessBoard {
       chessBoard: document.querySelector(".chessBoard"),
       blackOut: document.querySelector(".black_out"),
       whiteOut: document.querySelector(".white_out"),
-      opMove: null
+      opMove: null,
+      opLeave: null
     };
     this.clickChessPiece = clickChessPiece;
     this.clickEmptyCell = clickEmptyCell;
@@ -301,7 +302,7 @@ export class ViewChessBoard {
 
   renderOpMove(isRender) {
     if (!this.dom.opMove) {
-      const opMove = document.createElement('div');
+      const opMove = document.createElement("div");
       opMove.classList.add("opMove");
       opMove.innerHTML = "Now the opponent’s move";
       this.dom.opMove = opMove;
@@ -316,5 +317,22 @@ export class ViewChessBoard {
     } else {
       this.dom.opMove.remove();
     }
+  }
+
+  renderOpLeave(handlerBtnOk) {
+    const opLeave = document.createElement("div");
+    opLeave.classList.add("opLeave");
+    opLeave.innerHTML = TemplateChessBoard.getModalOpLeave();
+    opLeave.querySelector("button").addEventListener("click", handlerBtnOk);
+    const top = this.dom.chessBoard.offsetTop + this.dom.chessBoard.offsetHeight / 2 - 60;
+    const left = this.dom.chessBoard.offsetLeft + this.dom.chessBoard.offsetWidth / 2 - 125;
+    opLeave.style.left = `${left}px`;
+    opLeave.style.top = `${top}px`;
+    this.dom.opLeave = opLeave;
+    this.dom.wrapper.append(opLeave);
+  }
+
+  closeModalOpLeave() {
+    this.dom.opLeave.remove();
   }
 }

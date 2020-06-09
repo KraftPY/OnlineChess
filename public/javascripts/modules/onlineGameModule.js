@@ -4,6 +4,8 @@ export class onlineGameModule {
     this.publisher = publisher;
     this.init();
     this.handlerStartMove = null;
+
+    this.publisher.subscribe("leaveOnlineGame", this.leaveGame.bind(this));
   }
 
   init() {
@@ -23,17 +25,19 @@ export class onlineGameModule {
     });
   }
 
-  createGame(gameId, { startGame, startMove }) {
+  createGame(gameId, { startGame, startMove, opLeaveGame }) {
 
     this.handlerStartMove = startMove;
     this.socket.emit("create new game", gameId);
     this.socket.on("start game", startGame);
+    this.socket.on("opponent leave game", opLeaveGame);
   }
 
-  joinGame(gameId, login, { startGame, startMove }) {
+  joinGame(gameId, login, { startGame, startMove, opLeaveGame }) {
     this.handlerStartMove = startMove;
     this.socket.emit("connect to the game", { gameId, login });
     this.socket.on("start game", startGame);
+    this.socket.on("opponent leave game", opLeaveGame);
   }
 
   reconnect(gameId, login, startMove) {
@@ -43,5 +47,12 @@ export class onlineGameModule {
 
   sendMove(id, game) {
     this.socket.emit("send move", { id, game });
+  }
+
+  leaveGame() {
+    const onlineGame = JSON.parse(localStorage.getItem("onlineGame"));
+    if (onlineGame) {
+      this.socket.emit("leave game", onlineGame.gameId);
+    }
   }
 }

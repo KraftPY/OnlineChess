@@ -1,5 +1,9 @@
 export class ModelChessBoard {
   constructor() {
+    this.resetAllVariable();
+  }
+
+  resetAllVariable() {
     this.arrChessPieces = [];
     this.whoseMove = "white"; // чей сейчас ход. При старте новой игры первыми всегда ходят белые фигуры
     this.isChecked = false; // Чек королю

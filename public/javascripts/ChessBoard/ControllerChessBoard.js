@@ -19,11 +19,13 @@ export class ControllerChessBoard {
     this.publisher.subscribe("createOnlineGame", this.createOnlineGame.bind(this));
     this.publisher.subscribe("joinOnlineGame", this.joinOnlineGame.bind(this));
     this.publisher.subscribe("reconnectOnlineGame", this.reconnectOnlineGame.bind(this));
+    this.publisher.subscribe("logout", this.logout.bind(this));
 
     this.tempPieces = { first: null, second: null };
   }
 
   newGame() {
+    this.publisher.publish("leaveOnlineGame");
     this.model.changeIsOnlineGame = false;
     this.model.notOnlineGame();
     this.view.renderOpMove(false);
@@ -34,6 +36,9 @@ export class ControllerChessBoard {
   }
 
   loadGame() {
+    const onlineGame = this.model.getSaveOnlineGame();
+    if (onlineGame) return;
+
     this.view.removeAllPieces(this.model.arrChessPieces);
     const lastMove = this.model.getSaveGame();
     if (lastMove) {
@@ -458,7 +463,8 @@ export class ControllerChessBoard {
     this.model.saveGameId(gameId);
     const handlers = {
       startGame: this.startOnlineGame.bind(this),
-      startMove: this.startMoveOnline.bind(this)
+      startMove: this.startMoveOnline.bind(this),
+      opLeaveGame: this.opLeaveGame.bind(this)
     };
     this.onlineGameModule.createGame(gameId, handlers);
     console.log(`Game created id: ${gameId}`);
@@ -470,7 +476,8 @@ export class ControllerChessBoard {
     this.model.saveGameId(gameId);
     const handlers = {
       startGame: this.startOnlineGame.bind(this),
-      startMove: this.startMoveOnline.bind(this)
+      startMove: this.startMoveOnline.bind(this),
+      opLeaveGame: this.opLeaveGame.bind(this)
     };
     const login = this.model.getUserLogin();
     this.onlineGameModule.joinGame(gameId, login, handlers);
@@ -536,7 +543,38 @@ export class ControllerChessBoard {
     console.log(`Reconnected to the game ${onlineGame.gameId}`);
   }
 
+  opLeaveGame() {
+    this.view.renderOpLeave(this.handlerModalOpLeave.bind(this));
+    this.view.removeAllListeners(this.model.arrChessPieces);
+  }
+
+  handlerModalOpLeave() {
+    this.model.changeIsOnlineGame = false;
+    this.model.notOnlineGame();
+    this.view.renderOpMove(false);
+    this.view.clearChessBoard(this.model.arrDomNodesChessPiece);
+    this.view.removeAllPieces(this.model.arrChessPieces);
+    this.model.createNewChessPiece([], true);
+    this.publisher.publish("clearHistory");
+    this.view.closeModalOpLeave();
+  }
+
   // End Online game block
+
+  logout() {
+    const onlineGame = this.model.getSaveOnlineGame();
+    if (onlineGame) {
+      this.publisher.publish("leaveOnlineGame");
+      this.model.changeIsOnlineGame = false;
+      this.model.notOnlineGame();
+      this.view.renderOpMove(false);
+      this.view.clearChessBoard(this.model.arrDomNodesChessPiece);
+      this.view.removeAllPieces(this.model.arrChessPieces);
+      this.model.createNewChessPiece([], true);
+      this.publisher.publish("clearHistory");
+    };
+
+  }
 
   getMovesPiece({ pieceName, pos, color }) {
     switch (pieceName) {

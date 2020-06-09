@@ -15,15 +15,6 @@ export class AuthorizationController {
 		this.publisher.subscribe('no_auth', this.handlerNoAuthGlobalEvent.bind(this));
 	}
 
-	// ToDo list:
-	// 1) Убрать чтоб после авторизации не выпадало submenu
-	// 2) если на body отпустить клавишу мыши, то модальное окно закроется
-	// 3) после успешной регистрации или измен. настроек, при нажатии Enter срабатывает submit
-	// 
-
-
-
-
 	handlerSubmenu() {
 		if (this.model.authUser) {
 			const name = this.model.getUserFullName();
@@ -277,6 +268,7 @@ export class AuthorizationController {
 		this.view.renderNoAuthMenu();
 		this.view.closeSubmenu();
 		this.model.clearAuth();
+		this.publisher.publish("logout");
 	}
 
 	handlerNoAuthGlobalEvent() {

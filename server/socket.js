@@ -40,6 +40,10 @@ module.exports = socket => {
     saveHistoryGame(id, game);
     socket.broadcast.to(id).emit("opponent ended move", game);
   });
+
+  socket.on("leave game", gameId => {
+    socket.broadcast.to(gameId).emit("opponent leave game");
+  });
 };
 
 function getRandomColor() {

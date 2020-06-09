@@ -282,6 +282,38 @@ body {
   font-size: 20px;
   background-color: #a3a3a3;
   opacity: 0.8;
+  border-radius: 10px;
+}
+
+.opLeave{
+  position: absolute;
+  width: 250px;
+  height: 120px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #a3a3a3;
+  font-size: 20px;
+  border-radius: 10px;
+}
+
+.opLeave button{
+  margin-top: 15px;
+  width: 50px;
+  height: 30px;
+  font-size: 18px;
+  border-radius: 3px;
+  border: none;
+  box-shadow: none;
+  outline: none;
+  background-color: rgb(65, 161, 65);
+  box-shadow: 2px 2px 2px rgb(50, 119, 50);
+  color: white;
+}
+
+.opLeave button:active{
+  box-shadow: -2px -2px 2px rgb(50, 119, 50);
 }
 
 /* End Online game */

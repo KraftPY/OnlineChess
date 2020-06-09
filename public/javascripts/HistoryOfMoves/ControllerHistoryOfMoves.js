@@ -6,6 +6,7 @@ export class ControllerHistoryOfMoves {
     this.model = new ModelHistoryOfMoves();
     this.view = new ViewHistoryOfMoves(this.stepBackInHistoryMoves.bind(this));
     this.publisher = publisher;
+    this.publisher.subscribe("clearHistory", this.clearHistory.bind(this));
     this.publisher.subscribe("moveEnd", this.addNewMove.bind(this));
     this.publisher.subscribe("loadGame", this.loadGame.bind(this));
     this.publisher.subscribe("startPracticeGame", this.newPracticeGame.bind(this));
@@ -18,6 +19,10 @@ export class ControllerHistoryOfMoves {
   }
 
   newOnlineGame() {
+    this.view.clearListMoves();
+  }
+
+  clearHistory() {
     this.view.clearListMoves();
   }
 
