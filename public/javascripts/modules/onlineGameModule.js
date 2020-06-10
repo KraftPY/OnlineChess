@@ -9,11 +9,9 @@ export class onlineGameModule {
   }
 
   init() {
-    this.socket.on("connection", data => {
-      console.log(data.msg);
+    this.socket.on("connection", () => {
 
       const onlineGame = JSON.parse(localStorage.getItem("onlineGame"));
-
       if (onlineGame) {
         this.publisher.publish("reconnectOnlineGame");
         this.socket.emit("reconnect", onlineGame.gameId)

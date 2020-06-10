@@ -19,6 +19,7 @@ const schema = new Schema({
     type: String,
     required: true
   },
+  status: { type: String },
   opponent: { type: String },
   opColor: { type: String },
   gameHistory: { type: Object },

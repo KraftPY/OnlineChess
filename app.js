@@ -36,6 +36,7 @@ app.post('/change-setting', routes.changeSetting);
 app.post('/create-game', routes.createGame);
 app.post('/join-game', routes.joinGame);
 app.get('/list-games', routes.listGames);
+app.post('/delete-game', routes.deleteGame);
 
 module.exports = {
 	app,

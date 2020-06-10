@@ -50,15 +50,16 @@ export class ViewStartGame {
     this.dom.newGameModal.addEventListener("click", handlerNewGameModal);
   }
 
-  renderTableData(res) {
+  renderTableData(res, gameId) {
     // render created game list
     const tBody = document.querySelector(".created_games_list tbody");
 
     tBody.innerHTML = "";
     if (res.status && res.data.length) {
-      res.data.forEach(
-        (game, i) => (tBody.innerHTML += TemplateStartGame.getTableCol(game, i))
-      );
+      res.data.forEach((game, i) => {
+        const isMyGame = (gameId == game.id) ? true : false;
+        tBody.innerHTML += TemplateStartGame.getTableCol(game, i, isMyGame);
+      });
     } else {
       tBody.innerHTML = TemplateStartGame.getEmptyTable();
     }

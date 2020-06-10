@@ -1,6 +1,6 @@
 export class TemplateStartGame {
-  static getNewGameModal() {
-    return `<button class="btn_close_modal_newgame">&times;</button>
+	static getNewGameModal() {
+		return `<button class="btn_close_modal_newgame">&times;</button>
 		<div class="tabs_group">
 			<input type="checkbox" id="tabs_left" class="tabs_left" checked><label class="checked_tab left_label"
 				for="tabs_left">New game
@@ -53,26 +53,28 @@ export class TemplateStartGame {
 				<button class="create_practice_game">Create practice game</button>
 			</div>
 		</div>`;
-  }
+	}
 
-  static getTableCol(game, num) {
-    return `<tr>
+	static getTableCol(game, num, isMyGame) {
+		return `<tr>
 		<td>${num + 1}</td>
 		<td>${game.name}</td>
 		<td>${game.user} (${game.userColor})</td>
 		<td>
-			<button class="btn_join_game" data-game="${game.id}">Join</button>
+			${!isMyGame ?
+				`<button class="btn_join_game" data-game="${game.id}">Join</button>` :
+				`<button class="btn_leave_game" data-game="${game.id}">Leave</button>`}
 		</td>
 	</tr>`;
-  }
+	}
 
-  static getEmptyTable() {
-    return `<tr>
+	static getEmptyTable() {
+		return `<tr>
 		<td colspan="4">No created games</td>
 	</tr>`;
-  }
+	}
 
-  static getLoadGameModal() {
-    return ``;
-  }
+	static getLoadGameModal() {
+		return ``;
+	}
 }

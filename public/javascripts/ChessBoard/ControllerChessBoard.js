@@ -473,7 +473,6 @@ export class ControllerChessBoard {
   }
 
   joinOnlineGame(gameId) {
-    this.model.saveGameId(gameId);
     const handlers = {
       startGame: this.startOnlineGame.bind(this),
       startMove: this.startMoveOnline.bind(this),
@@ -492,7 +491,10 @@ export class ControllerChessBoard {
     this.model.whoseMoveNow != "white" ? this.model.changeWhoseMove() : false;
   }
 
-  startOnlineGame(opponent) {
+  startOnlineGame({ opponent, gameId }) {
+    console.log(opponent, gameId);
+
+    this.model.saveGameId(gameId);
     this.model.saveOpponent(opponent);
 
     this.newOnlineGame();

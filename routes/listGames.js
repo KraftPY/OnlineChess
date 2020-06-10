@@ -9,7 +9,8 @@ router.get("/list-games", async (req, res) => {
         id: game._id,
         name: game.name,
         user: game.user,
-        userColor: game.userColor
+        userColor: game.userColor,
+        status: game.status,
       };
     });
 

@@ -16,8 +16,9 @@ export class ControllerStartGame {
 
   async handlerNewGameBtn() {
     const createdGamesList = await this.model.getCreatedGamesFromSrv();
+    const gameId = this.model.getGameId();
     this.view.openNewGameModal();
-    this.view.renderTableData(createdGamesList);
+    this.view.renderTableData(createdGamesList, gameId);
   }
 
   handlerLoadGameBtn() {
@@ -61,6 +62,11 @@ export class ControllerStartGame {
         // -------------------------------------------
         break;
       }
+      case "btn_leave_game": {
+        this.tryDeleteGame(ev.target.dataset.game);
+        // -------------------------------------------
+        break;
+      }
       default:
         break;
     }
@@ -90,7 +96,8 @@ export class ControllerStartGame {
       this.publisher.publish("createOnlineGame", res.gameId);
       this.view.clearCreateGameData();
       const createdGamesList = await this.model.getCreatedGamesFromSrv();
-      this.view.renderTableData(createdGamesList);
+      const gameId = this.model.getGameId();
+      this.view.renderTableData(createdGamesList, gameId);
     } else if (
       res.msg == "JsonWebTokenError" ||
       res.msg == "TokenExpiredError"
@@ -116,5 +123,10 @@ export class ControllerStartGame {
     } else {
       this.view.showHideNoCreateGame(res.msg);
     }
+  }
+
+  async tryDeleteGame(game) {
+    const res = await this.model.deleteGame(game);
+    console.log(res.msg);
   }
 }

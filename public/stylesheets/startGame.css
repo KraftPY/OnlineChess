@@ -133,10 +133,18 @@
   border-right: 2px solid rgb(255, 255, 255);
 }
 
-.created_games_list td:last-child button{
+.btn_join_game{
   border-radius: 5px;
   outline: none;
   background-color: rgb(65, 161, 65);
+  color: white;
+  cursor: pointer;
+}
+
+.btn_leave_game{
+  border-radius: 5px;
+  outline: none;
+  background-color: rgb(175, 37, 37);
   color: white;
   cursor: pointer;
 }

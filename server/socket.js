@@ -10,21 +10,23 @@ module.exports = socket => {
 
   socket.on("connect to the game", ({ gameId, login }) => {
     Game.findOne({ _id: gameId }).then(game => {
-      socket.join(gameId);
-      const user = {
-        name: game.user,
-        color: game.userColor === "random" ? getRandomColor() : game.userColor
-      };
-      const opponent = {
-        name: login,
-        color: user.color === "black" ? "white" : "black"
-      };
+      if (!game.opponent) {
+        socket.join(gameId);
+        const user = {
+          name: game.user,
+          color: game.userColor === "random" ? getRandomColor() : game.userColor
+        };
+        const opponent = {
+          name: login,
+          color: user.color === "black" ? "white" : "black"
+        };
 
-      socket.emit('start game', user);
+        socket.emit('start game', ({ opponent: user, gameId }));
 
-      socket.broadcast.to(gameId).emit('start game', opponent);
+        socket.broadcast.to(gameId).emit('start game', ({ opponent, gameId }));
 
-      saveStartGame(gameId, user, opponent);
+        saveStartGame(gameId, user, opponent);
+      }
     });
   });
 
@@ -57,6 +59,7 @@ function saveStartGame(gameId, user, opponent) {
         userColor: user.color,
         opponent: opponent.name,
         opColor: opponent.color,
+        status: "started",
       }
     }).catch(err => console.log(err));
 }

@@ -5,6 +5,7 @@ const changeSetting = require('./changeSetting');
 const createGame = require('./createGame');
 const joinGame = require('./joinGame');
 const listGames = require('./listGames');
+const deleteGame = require('./deleteGame');
 
 module.exports = {
   registration,
@@ -14,4 +15,5 @@ module.exports = {
   createGame,
   joinGame,
   listGames,
+  deleteGame,
 };
