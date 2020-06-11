@@ -20,6 +20,7 @@ export class ControllerChessBoard {
     this.publisher.subscribe("joinOnlineGame", this.joinOnlineGame.bind(this));
     this.publisher.subscribe("reconnectOnlineGame", this.reconnectOnlineGame.bind(this));
     this.publisher.subscribe("logout", this.logout.bind(this));
+    this.publisher.subscribe("userRemoveGame", this.removeGame.bind(this));
 
     this.tempPieces = { first: null, second: null };
   }
@@ -467,9 +468,6 @@ export class ControllerChessBoard {
       opLeaveGame: this.opLeaveGame.bind(this)
     };
     this.onlineGameModule.createGame(gameId, handlers);
-    console.log(`Game created id: ${gameId}`);
-    console.log("----------------------------------------");
-    console.log("Waiting for the opponent...");
   }
 
   joinOnlineGame(gameId) {
@@ -480,7 +478,6 @@ export class ControllerChessBoard {
     };
     const login = this.model.getUserLogin();
     this.onlineGameModule.joinGame(gameId, login, handlers);
-    console.log(`Сonnected to the game ${gameId}`);
   }
 
   newOnlineGame() {
@@ -492,8 +489,6 @@ export class ControllerChessBoard {
   }
 
   startOnlineGame({ opponent, gameId }) {
-    console.log(opponent, gameId);
-
     this.model.saveGameId(gameId);
     this.model.saveOpponent(opponent);
 
@@ -523,26 +518,31 @@ export class ControllerChessBoard {
   }
 
   reconnectOnlineGame() {
-    const saveGame = this.model.getSaveGame();
-    this.model.changeIsOnlineGame = true;
-    this.view.removeAllPieces(this.model.arrChessPieces);
-    const arrLoadPiece = this.view.renderSaveGame(saveGame);
-    this.model.createNewChessPiece(arrLoadPiece);
-    this.publisher.publish("loadGame");
-
-    const onlineGame = this.model.getSaveOnlineGame();
-    const prevColorMove = saveGame.tempPieces.first.color;
-    if (onlineGame.opColor !== prevColorMove) {
-      this.view.removeAllListeners(this.model.arrChessPieces);
-      this.view.renderOpMove(true);
-    }
-    this.model.whoseMoveNow === onlineGame.opColor ? this.model.changeWhoseMove() : false;
-
-
     const login = this.model.getUserLogin();
-    const startMove = this.startMoveOnline.bind(this);
-    this.onlineGameModule.reconnect(onlineGame.gameId, login, startMove);
-    console.log(`Reconnected to the game ${onlineGame.gameId}`);
+    const onlineGame = this.model.getSaveOnlineGame();
+    const handlers = {
+      startGame: this.startOnlineGame.bind(this),
+      startMove: this.startMoveOnline.bind(this),
+      opLeaveGame: this.opLeaveGame.bind(this)
+    };
+    this.onlineGameModule.reconnect(onlineGame.gameId, login, handlers);
+
+    const saveGame = this.model.getSaveGame();
+    if (saveGame) {
+      this.model.changeIsOnlineGame = true;
+      this.view.removeAllPieces(this.model.arrChessPieces);
+      const arrLoadPiece = this.view.renderSaveGame(saveGame);
+      this.model.createNewChessPiece(arrLoadPiece);
+      this.publisher.publish("loadGame");
+
+
+      const prevColorMove = saveGame.tempPieces.first.color;
+      if (onlineGame.opColor !== prevColorMove) {
+        this.view.removeAllListeners(this.model.arrChessPieces);
+        this.view.renderOpMove(true);
+      }
+      this.model.whoseMoveNow === onlineGame.opColor ? this.model.changeWhoseMove() : false;
+    }
   }
 
   opLeaveGame() {
@@ -551,6 +551,7 @@ export class ControllerChessBoard {
   }
 
   handlerModalOpLeave() {
+    this.view.closeModalOpLeave();
     this.model.changeIsOnlineGame = false;
     this.model.notOnlineGame();
     this.view.renderOpMove(false);
@@ -558,7 +559,15 @@ export class ControllerChessBoard {
     this.view.removeAllPieces(this.model.arrChessPieces);
     this.model.createNewChessPiece([], true);
     this.publisher.publish("clearHistory");
-    this.view.closeModalOpLeave();
+  }
+
+  removeGame() {
+    this.view.clearChessBoard(this.model.arrDomNodesChessPiece);
+    this.view.removeAllPieces(this.model.arrChessPieces);
+    this.model.createNewChessPiece([], true);
+    this.publisher.publish("clearHistory");
+    this.model.notOnlineGame();
+    this.view.renderOpMove(false);
   }
 
   // End Online game block

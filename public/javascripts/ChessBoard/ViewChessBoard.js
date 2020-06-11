@@ -329,10 +329,11 @@ export class ViewChessBoard {
     opLeave.style.left = `${left}px`;
     opLeave.style.top = `${top}px`;
     this.dom.opLeave = opLeave;
-    this.dom.wrapper.append(opLeave);
+    this.dom.wrapper.append(this.dom.opLeave);
   }
 
   closeModalOpLeave() {
-    this.dom.opLeave.remove();
+    const m = document.querySelectorAll(".opLeave");
+    m.forEach(el => el.remove());
   }
 }

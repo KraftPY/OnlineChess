@@ -14,7 +14,6 @@ export class onlineGameModule {
       const onlineGame = JSON.parse(localStorage.getItem("onlineGame"));
       if (onlineGame) {
         this.publisher.publish("reconnectOnlineGame");
-        this.socket.emit("reconnect", onlineGame.gameId)
       }
     });
 
@@ -38,9 +37,11 @@ export class onlineGameModule {
     this.socket.on("opponent leave game", opLeaveGame);
   }
 
-  reconnect(gameId, login, startMove) {
+  reconnect(gameId, login, { startGame, startMove, opLeaveGame }) {
     this.handlerStartMove = startMove;
     this.socket.emit("reconnect to the game", { gameId, login });
+    this.socket.on("start game", startGame);
+    this.socket.on("opponent leave game", opLeaveGame);
   }
 
   sendMove(id, game) {

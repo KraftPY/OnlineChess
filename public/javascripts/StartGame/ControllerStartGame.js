@@ -127,6 +127,18 @@ export class ControllerStartGame {
 
   async tryDeleteGame(game) {
     const res = await this.model.deleteGame(game);
-    console.log(res.msg);
+    if (res.status) {
+      this.publisher.publish("leaveOnlineGame");
+      this.publisher.publish("userRemoveGame");
+      this.handlerNewGameBtn();
+    } else if (
+      res.msg == "JsonWebTokenError" ||
+      res.msg == "TokenExpiredError"
+    ) {
+      this.view.closeModalWnd();
+      this.publisher.publish("no_auth");
+    } else {
+      this.view.showHideNoCreateGame(res.msg);
+    }
   }
 }

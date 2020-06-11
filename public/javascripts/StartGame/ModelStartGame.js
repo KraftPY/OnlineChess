@@ -49,7 +49,7 @@ export class ModelStartGame {
 				'Content-Type': 'application/json',
 				'Authorization': token,
 			},
-			body: game,
+			body: JSON.stringify({ id: game })
 		})
 			.then(res => res.json());
 	}

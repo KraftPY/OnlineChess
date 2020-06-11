@@ -132,8 +132,6 @@ export class ModelChessBoard {
   }
 
   saveOpponent(op) {
-    console.log(op);
-
     const onlineGame = JSON.parse(localStorage.getItem("onlineGame"));
     onlineGame.opponent = op.name;
     onlineGame.opColor = op.color;
