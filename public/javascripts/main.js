@@ -1,9 +1,9 @@
-import { PubSub } from "./PubSub/PubSub.js";
-import { ControllerChessBoard } from "./ChessBoard/ControllerChessBoard.js";
-import { ControllerHistoryOfMoves } from "./HistoryOfMoves/ControllerHistoryOfMoves.js";
-import { ControllerStartGame } from "./startGame/ControllerStartGame.js";
-import { AuthorizationController } from "./Authorization/AuthorizationController.js";
-import { onlineGameModule } from "./modules/onlineGameModule.js";
+import { PubSub } from "/public/javascripts/pubSub/PubSub.js";
+import { ControllerChessBoard } from "/public/javascripts/ChessBoard/ControllerChessBoard.js";
+import { ControllerHistoryOfMoves } from "/public/javascripts/HistoryOfMoves/ControllerHistoryOfMoves.js";
+import { ControllerStartGame } from "/public/javascripts/startGame/ControllerStartGame.js";
+import { AuthorizationController } from "/public/javascripts/Authorization/AuthorizationController.js";
+import { onlineGameModule } from "/public/javascripts/modules/onlineGameModule.js";
 
 // ---------------------Start-------------------------------
 
